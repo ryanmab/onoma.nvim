@@ -1,0 +1,221 @@
+name: Release Drafter
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled, synchronize]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update_release:
+    name: Draft release
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.release-drafter.outputs.tag_name }}
+
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        id: release-drafter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  check_labels:
+    name: Validate Labels
+    runs-on: ubuntu-latest
+    needs: update_release
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: mheap/github-action-required-labels@v5
+        if: ${{ always() }}
+        with:
+          mode: exactly
+          count: 1
+          labels: "bump-patch, bump-minor, bump-major, skip-changelog"
+          add_comment: true
+          message: |
+            This PR needs **{{ errorString }}** one label added to indicate whether it is a major, minor, or patch change.
+
+            The available labels are: `bump-patch`, `bump-minor`, `bump-major` and `skip-changelog`.
+
+      - uses: mheap/github-action-required-labels@v5
+        if: ${{ always() }}
+        with:
+          mode: exactly
+          count: 1
+          labels: "feature, chore, bug"
+          add_comment: true
+          message: |
+            This PR needs **{{ errorString }}** one label added to indicate whether it is a feature, bug, or chore.
+
+            The available labels are: `feature`, `chore`, `bug`.
+
+  macos_builds:
+    name: Build release asset (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [update_release]
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: "./bridge"
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact_name: target/x86_64-apple-darwin/release/libonoma_bridge.dylib
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact_name: target/aarch64-apple-darwin/release/libonoma_bridge.dylib
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install nightly
+        uses: dtolnay/rust-toolchain@nightly
+
+      - name: Add target
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Build for macOS
+        run: |
+          # Ventura (https://en.wikipedia.org/wiki/MacOS_version_history#Releases)
+          MACOSX_DEPLOYMENT_TARGET="13" cargo build --release --target ${{ matrix.target }}
+          mv "${{ matrix.artifact_name }}" "${{ matrix.target }}.dylib"
+
+      - name: Generate checksum
+        run: sha256sum "${{ matrix.target }}.dylib" > "${{ matrix.target }}.dylib.sha256"
+
+      - name: Upload build
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{needs.update_release.outputs.tag_name}}
+          draft: true
+          token: ${{ github.token }}
+          files: ./bridge/${{ matrix.target }}*
+
+  windows_builds:
+    name: Build release asset (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [update_release]
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: "./bridge"
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: target/x86_64-pc-windows-msvc/release/onoma_bridge.dll
+          - os: windows-latest
+            target: aarch64-pc-windows-msvc
+            artifact_name: target/aarch64-pc-windows-msvc/release/onoma_bridge.dll
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install nightly
+        uses: dtolnay/rust-toolchain@nightly
+
+      - name: Add target
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Build for Windows
+        run: |
+          cargo build --release --target ${{ matrix.target }}
+          mv "${{ matrix.artifact_name }}" "${{ matrix.target }}.dll"
+
+      - name: Generate checksum
+        run: sha256sum "${{ matrix.target }}.dll" > "${{ matrix.target }}.dll.sha256"
+
+      - name: Upload build
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{needs.update_release.outputs.tag_name}}
+          draft: true
+          token: ${{ github.token }}
+          files: ./bridge/${{ matrix.target }}*
+
+  linux_builds:
+    name: Build release asset (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [update_release]
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: "./bridge"
+    strategy:
+      matrix:
+        include:
+          ## Linux builds
+          # Glibc 2.21
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: target/x86_64-unknown-linux-gnu/release/libonoma_bridge.so
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            artifact_name: target/aarch64-unknown-linux-gnu/release/libonoma_bridge.so
+          # Musl 1.2.3
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            artifact_name: target/x86_64-unknown-linux-musl/release/libonoma_bridge.so
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            artifact_name: target/aarch64-unknown-linux-musl/release/libonoma_bridge.so
+          # # Android (Termux)
+          # - os: ubuntu-latest
+          #   target: aarch64-linux-android
+          #   artifact_name: target/aarch64-linux-android/release/libonoma_bridge.so
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install nightly
+        uses: dtolnay/rust-toolchain@nightly
+
+      - name: Add target
+        run: rustup target add ${{ matrix.target }}
+
+      - uses: mlugg/setup-zig@v2
+
+      - name: Install Cargo Zigbuild
+        run: cargo install cargo-zigbuild
+
+        # Use zigbuild for cross compiling to Linux, as SQLite is a C dependency
+        # and by default gcc isn't available for Rust to compile the binary itself
+      - name: Build for Linux
+        run: |
+          cargo zigbuild --release --target ${{ matrix.target }}
+          mv "${{ matrix.artifact_name }}" "${{ matrix.target }}.so"
+
+      - name: Generate checksum
+        run: sha256sum "${{ matrix.target }}.so" > "${{ matrix.target }}.so.sha256"
+
+      - name: Upload build
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{needs.update_release.outputs.tag_name}}
+          draft: true
+          token: ${{ github.token }}
+          files: ./bridge/${{ matrix.target }}*

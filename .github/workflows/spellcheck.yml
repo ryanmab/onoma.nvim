@@ -1,0 +1,23 @@
+name: Spellcheck
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+jobs:
+  spellcheck:
+    name: Run spell check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Run spellcheck
+        uses: crate-ci/typos@v1.43.1

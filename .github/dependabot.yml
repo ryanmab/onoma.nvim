@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "chore"
+      - "bump-patch"
+
+  - package-ecosystem: cargo
+    directory: bridge/
+    schedule:
+      interval: daily
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-patch"
+          - "version-update:semver-minor"
+    labels:
+      - "dependencies"
+      - "rust"
+      - "chore"
+      - "bump-patch"
