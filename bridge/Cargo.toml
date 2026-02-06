@@ -9,10 +9,15 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 flexi_logger = "0.31.7"
 log = "0.4.28"
-mlua = { version = "0.11.5", features = ["luajit", "module", "async", "macros"] }
+mlua = { version = "0.11.5", features = [
+    "luajit",
+    "module",
+    "async",
+    "macros",
+] }
 thiserror = "2.0.17"
 tokio = { version = "1.48.0", features = ["rt", "rt-multi-thread", "macros"] }
-onoma = "0.0.1"
+onoma = "0.0.2"
 futures = "0.3.31"
 xdir = "0.1.0"
 tokio-stream = { version = "0.1.17", features = ["sync"] }
