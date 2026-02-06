@@ -362,6 +362,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "frizbee"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4d024031f1a5bc5f19917baa0b618f1067610e35ba23e9f105653fcb27e74f5c"
+dependencies = [
+ "multiversion",
+ "rayon",
+]
+
+[[package]]
 name = "fsevent-sys"
 version = "4.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -963,16 +973,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "neo_frizbee"
-version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2b4421f748f561dd0bb677e46f2e6c1ed2c52ba7130349229a73445af5010d17"
-dependencies = [
- "multiversion",
- "rayon",
-]
-
-[[package]]
 name = "notify"
 version = "8.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1071,16 +1071,16 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
 name = "onoma"
-version = "0.0.1"
+version = "0.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd6d26fbd14dd66735f4bcc24f9517e6d93d9cfedb6cc82a9d43d40c2f13bc01"
+checksum = "08da6d140e7fec2d9f2570abcbd0cc89385abde72c8763f0bd4f62b49e5f146b"
 dependencies = [
  "chrono",
+ "frizbee",
  "hex",
  "ignore",
  "itertools",
  "log",
- "neo_frizbee",
  "notify",
  "notify-debouncer-mini",
  "serde",
