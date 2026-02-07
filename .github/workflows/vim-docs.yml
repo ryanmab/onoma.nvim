@@ -1,0 +1,33 @@
+name: Vim Docs
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - README.md
+      - .github/workflows/vim-docs.yml
+
+permissions:
+  contents: write
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    name: Update Vim docs
+    steps:
+      - uses: actions/checkout@v2
+      - uses: kdheepak/panvimdoc@main
+        with:
+          vimdoc: ${{ github.event.repository.name }}
+          version: "Neovim >= 0.10.0"
+
+      - name: Get last commit metadata
+        id: last-commit
+        run: |
+          echo "author=$(git log -1 --pretty=\"%an <%ae>\")" >> $GITHUB_OUTPUT
+
+      - uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_author: ${{ steps.last-commit.outputs.author }}
+          commit_message: "Update docs"
