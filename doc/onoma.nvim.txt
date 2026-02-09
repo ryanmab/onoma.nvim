@@ -1,4 +1,4 @@
-*onoma.nvim.txt*       For Neovim >= 0.10.0      Last change: 2026 February 07
+*onoma.nvim.txt*       For Neovim >= 0.10.0      Last change: 2026 February 09
 
 ==============================================================================
 Table of Contents                               *onoma.nvim-table-of-contents*
