@@ -20,4 +20,4 @@ jobs:
           persist-credentials: false
 
       - name: Run spellcheck
-        uses: crate-ci/typos@v1.43.3
+        uses: crate-ci/typos@v1.43.4
