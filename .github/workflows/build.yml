@@ -49,7 +49,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        toolchain: [nightly, beta]
+        toolchain: [stable, beta]
 
     steps:
       - uses: actions/checkout@v6
@@ -66,3 +66,23 @@ jobs:
           reporter: "github-pr-check"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workdir: "./bridge"
+
+  msrv:
+    runs-on: ubuntu-latest
+    name: MSRV (${{ matrix.msrv }})
+    needs: [lint]
+
+    strategy:
+      matrix:
+        msrv: ["1.88.0"]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install ${{ matrix.msrv }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.msrv }}
+
+      - name: cargo +${{ matrix.msrv }} check
+        run: cargo check

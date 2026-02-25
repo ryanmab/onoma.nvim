@@ -1,2 +1,0 @@
-[toolchain]
-channel = "nightly" # Required because neo_frizbee (SIMD fuzzy matching crate) uses nightly features
