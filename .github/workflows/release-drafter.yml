@@ -87,8 +87,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install nightly
-        uses: dtolnay/rust-toolchain@nightly
+      - name: Install stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Add target
         run: rustup target add ${{ matrix.target }}
@@ -133,8 +133,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install nightly
-        uses: dtolnay/rust-toolchain@nightly
+      - name: Install stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Add target
         run: rustup target add ${{ matrix.target }}
@@ -191,8 +191,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install nightly
-        uses: dtolnay/rust-toolchain@nightly
+      - name: Install stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Add target
         run: rustup target add ${{ matrix.target }}
