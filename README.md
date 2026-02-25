@@ -37,7 +37,7 @@ return {
 
      version = '*', -- Required when using prebuilt binaries
 
-     -- Otherwise, you can build from source (using Rust nightly)
+     -- Otherwise, you can build from source
      -- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
 
      dependencies = {
