@@ -8,7 +8,7 @@ rust-version = "1.88.0"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-flexi_logger = "0.31.7"
+flexi_logger = "0.31.8"
 log = "0.4.28"
 mlua = { version = "0.11.5", features = [
     "luajit",
