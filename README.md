@@ -26,7 +26,7 @@ It provides a first-class integration into Neovim, using Snacks Picker as the fr
 
 ## Demo
 
-<https://github.com/user-attachments/assets/6df459ec-e97d-4b95-8a97-11fb7aacecaf>
+https://github.com/user-attachments/assets/e5e90738-6976-4951-9a2f-4cad7f3ba1c3
 
 ## Installation
 
