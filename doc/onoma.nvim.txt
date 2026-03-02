@@ -1,4 +1,4 @@
-*onoma.nvim.txt*       For Neovim >= 0.10.0      Last change: 2026 February 25
+*onoma.nvim.txt*        For Neovim >= 0.10.0        Last change: 2026 March 02
 
 ==============================================================================
 Table of Contents                               *onoma.nvim-table-of-contents*
@@ -39,12 +39,13 @@ SUPPORTED LANGUAGES                *onoma.nvim-onoma.nvim-supported-languages*
 - Lua (`.lua`)
 - Clojure (`.clj`)
 - TypeScript (`.ts` and `.tsx`) / JavaScript (`.js` and `.jsx`)
+- Python (`.py`)
 
 
 DEMO                                              *onoma.nvim-onoma.nvim-demo*
 
 
-https://github.com/user-attachments/assets/6df459ec-e97d-4b95-8a97-11fb7aacecaf
+https://github.com/user-attachments/assets/e5e90738-6976-4951-9a2f-4cad7f3ba1c3
 
 
 INSTALLATION                              *onoma.nvim-onoma.nvim-installation*
