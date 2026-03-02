@@ -22,10 +22,11 @@ It provides a first-class integration into Neovim, using Snacks Picker as the fr
 - Lua (`.lua`)
 - Clojure (`.clj`)
 - TypeScript (`.ts` and `.tsx`) / JavaScript (`.js` and `.jsx`)
+- Python (`.py`)
 
 ## Demo
 
-https://github.com/user-attachments/assets/6df459ec-e97d-4b95-8a97-11fb7aacecaf
+<https://github.com/user-attachments/assets/6df459ec-e97d-4b95-8a97-11fb7aacecaf>
 
 ## Installation
 
