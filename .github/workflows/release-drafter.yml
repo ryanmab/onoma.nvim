@@ -26,6 +26,7 @@ jobs:
 
     steps:
       - name: Update draft release
+        id: release-drafter
         uses: release-drafter/release-drafter@v7
         if: github.ref == 'refs/heads/main'
         env:
