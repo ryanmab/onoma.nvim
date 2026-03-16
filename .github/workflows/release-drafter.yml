@@ -25,7 +25,7 @@ jobs:
       tag_name: ${{ steps.release-drafter.outputs.tag_name }}
 
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - uses: release-drafter/release-drafter@v7
         id: release-drafter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
