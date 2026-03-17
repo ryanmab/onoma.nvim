@@ -6,7 +6,7 @@ mod wrapper;
 
 /// The global Logging context shared between Rust and Lua.
 static LOGGER: LazyLock<LoggerHandle> = LazyLock::new(|| {
-    let pattern = "onoma_bridge=trace, onoma=trace";
+    let pattern = "onoma_bridge=debug, onoma=debug";
 
     let path = xdir::state().map_or_else(
         || PathBuf::from("./onoma/logs"),
