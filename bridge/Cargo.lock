@@ -734,14 +734,15 @@ dependencies = [
 
 [[package]]
 name = "ignored"
-version = "0.0.3"
+version = "0.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d458f043ed9307f7c30084306c1111226f825c0e39054090ded16f3a3abedfb"
+checksum = "e057349b935f232584809ac8a3abdbaf1403b4a26f6958149bfafb42a4171eb7"
 dependencies = [
  "log",
  "regex",
  "sha2",
  "thiserror",
+ "xdir",
 ]
 
 [[package]]
@@ -1061,9 +1062,9 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
 name = "onoma"
-version = "0.0.8"
+version = "0.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef55dd34464cceb96c10342e70fcf5b1312a28ff319c26dc26c5e33fc7c2ac35"
+checksum = "bd5b95781b830f6c501128ab37aa5c78f6a1320201ffe6a66bf601a21aaa6914"
 dependencies = [
  "chrono",
  "frizbee",
@@ -2017,9 +2018,9 @@ dependencies = [
 
 [[package]]
 name = "tree-sitter-rust"
-version = "0.24.0"
+version = "0.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b9b18034c684a2420722be8b2a91c9c44f2546b631c039edf575ccba8c61be1"
+checksum = "f715f73a0687261ddb686f0d64a1e5af57bd199c4d12be5fdda6676ce1885bf9"
 dependencies = [
  "cc",
  "tree-sitter-language",
