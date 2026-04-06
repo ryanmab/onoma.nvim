@@ -1,5 +1,6 @@
 local SnacksAsync = require('snacks.picker.util.async')
 local buffer = require('utils.buffer')
+local osc = require('utils.osc')
 
 local M = {}
 
@@ -19,6 +20,8 @@ function M.get_symbols(opts, resolver, _, ctx)
 	---@type onoma.QueryContext
 	local context = onoma.create_context(buffer.current_buffer_path(), opts.finder.symbol_kinds)
 
+	osc.set_progress_indicator(nil)
+
 	return function(cb)
 		local query = (ctx and ctx.filter and ctx.filter.search) or ''
 
@@ -30,6 +33,7 @@ function M.get_symbols(opts, resolver, _, ctx)
 
 			if item == nil then
 				-- Stream finished, we can return
+				osc.clear_progress_indicator()
 				break
 			elseif type(item) == 'userdata' then
 				---@cast item onoma.ResolvedSymbol
