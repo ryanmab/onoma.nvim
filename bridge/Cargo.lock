@@ -1115,9 +1115,9 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
 name = "onoma"
-version = "0.0.11"
+version = "0.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d85d16f27351cf9eb8df875f6a76cfe311b2f2074812bfe9af1b2a5a062083c5"
+checksum = "47685ce964bd98b4b399b8238b80bf439482d197483da971e2465a8b33829390"
 dependencies = [
  "chrono",
  "frizbee",
