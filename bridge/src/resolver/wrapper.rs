@@ -1,4 +1,5 @@
 use std::{
+    collections::HashMap,
     ops::{Deref, DerefMut},
     str::FromStr,
 };
@@ -64,7 +65,11 @@ impl FromLua for SymbolKind {
                     .map(SymbolKind)
                     .map_err(|e| LuaError::external(format!("Invalid SymbolKind: {e}")))
             }
-            _ => todo!(),
+            other => Err(mlua::Error::FromLuaConversionError {
+                from: other.type_name(),
+                to: "SymbolKind".to_string(),
+                message: Some("expected symbol kind".to_string()),
+            }),
         }
     }
 }
@@ -74,6 +79,95 @@ impl Deref for SymbolKind {
 
     fn deref(&self) -> &Self::Target {
         &self.0
+    }
+}
+
+/// A newtype Lua binding for the [`onoma::resolver::SymbolKindFilter`] enum.
+#[derive(Debug)]
+pub struct SymbolKindFilter(onoma::resolver::SymbolKindFilter);
+
+impl FromLua for SymbolKindFilter {
+    fn from_lua(value: LuaValue, _lua: &Lua) -> LuaResult<Self> {
+        match value {
+            LuaValue::Table(value) => {
+                let is_list = value
+                    .pairs::<LuaValue, LuaValue>()
+                    .any(|res| matches!(res, Ok((LuaValue::Integer(_), _))));
+
+                let filter = if is_list || value.is_empty() {
+                    // The filter is a numerically indexed list (or close to it). This means we can read
+                    // it out as a global list of symbol kinds to filter on.
+                    Self(onoma::resolver::SymbolKindFilter::Global(
+                        value
+                            .sequence_values::<SymbolKind>()
+                            .fold(Vec::new(), |mut kinds, i| {
+                                if let Ok(i) = i {
+                                    kinds.push(i.0);
+                                }
+
+                                kinds
+                            }),
+                    ))
+                } else {
+                    // The filter is a map of non-numerical keys (i.e. probably languages). This
+                    // means we should attempt to read it out as a per-language map of languages to
+                    // symbol kinds.
+                    let mut per_language = HashMap::new();
+
+                    for pair in value.pairs::<LuaValue, LuaValue>() {
+                        let (k, v) = pair?;
+
+                        let Ok(key) = k.to_string() else {
+                            continue;
+                        };
+                        let Ok(language) = onoma::models::parsed::Language::from_str(&key) else {
+                            continue;
+                        };
+
+                        let LuaValue::Table(value) = v else {
+                            continue;
+                        };
+
+                        per_language.insert(
+                            language,
+                            value.sequence_values::<SymbolKind>().fold(
+                                Vec::new(),
+                                |mut kinds, i| {
+                                    if let Ok(i) = i {
+                                        kinds.push(i.0);
+                                    }
+
+                                    kinds
+                                },
+                            ),
+                        );
+                    }
+
+                    Self(onoma::resolver::SymbolKindFilter::PerLanguage(per_language))
+                };
+
+                Ok(filter)
+            }
+            other => Err(mlua::Error::FromLuaConversionError {
+                from: other.type_name(),
+                to: "SymbolKindFilter".to_string(),
+                message: Some("expected table or nil".to_string()),
+            }),
+        }
+    }
+}
+
+impl Deref for SymbolKindFilter {
+    type Target = onoma::resolver::SymbolKindFilter;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl From<SymbolKindFilter> for onoma::resolver::SymbolKindFilter {
+    fn from(val: SymbolKindFilter) -> Self {
+        val.0
     }
 }
 

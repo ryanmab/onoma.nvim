@@ -3,7 +3,7 @@ use std::{path::PathBuf, sync::LazyLock};
 use mlua::prelude::*;
 use onoma::resolver::DatabaseBackedResolver;
 
-use crate::{resolver::wrapper::SymbolKind, watcher};
+use crate::{resolver::wrapper::SymbolKindFilter, watcher};
 
 use tokio::runtime;
 
@@ -49,7 +49,7 @@ pub fn get_resolver(
 #[allow(clippy::unnecessary_wraps)]
 pub fn create_context(
     _lua: &Lua,
-    (current_file, symbol_kinds): (Option<PathBuf>, Option<Vec<SymbolKind>>),
+    (current_file, symbol_kinds): (Option<PathBuf>, Option<SymbolKindFilter>),
 ) -> mlua::Result<wrapper::Context> {
     let mut context = onoma::resolver::Context::default();
 
@@ -58,14 +58,10 @@ pub fn create_context(
     }
 
     if let Some(symbol_kinds) = symbol_kinds {
-        context = context.with_symbol_kinds(
-            symbol_kinds
-                .into_iter()
-                .map(|kind| *kind)
-                .collect::<Vec<onoma::models::parsed::SymbolKind>>()
-                .as_slice(),
-        );
+        context = context.with_symbol_kinds(symbol_kinds.into());
     }
+
+    log::info!("Context created with: {:?}", &context);
 
     Ok(wrapper::Context(context))
 }
