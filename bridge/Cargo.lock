@@ -1215,7 +1215,7 @@ dependencies = [
 
 [[package]]
 name = "onoma-bridge"
-version = "0.0.12"
+version = "0.0.13"
 dependencies = [
  "flexi_logger",
  "futures",
