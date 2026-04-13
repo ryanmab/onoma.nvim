@@ -111,7 +111,7 @@ jobs:
         run: sha256sum "${{ matrix.target }}.dylib" > "${{ matrix.target }}.dylib.sha256"
 
       - name: Upload build
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{needs.update_release.outputs.tag_name}}
           draft: true
@@ -156,7 +156,7 @@ jobs:
         run: sha256sum "${{ matrix.target }}.dll" > "${{ matrix.target }}.dll.sha256"
 
       - name: Upload build
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{needs.update_release.outputs.tag_name}}
           draft: true
@@ -221,7 +221,7 @@ jobs:
         run: sha256sum "${{ matrix.target }}.so" > "${{ matrix.target }}.so.sha256"
 
       - name: Upload build
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{needs.update_release.outputs.tag_name}}
           draft: true
