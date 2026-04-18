@@ -1178,9 +1178,9 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
 name = "onoma"
-version = "0.0.14"
+version = "0.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5fec9e87ecfaf1a603be33fe9b4d9e4288ca5c8898153b23e2da4ad6ea36943"
+checksum = "94d2bba83f2ddd985907a9e8ab241dd7b95b58382715b0bf2464b4576104f693"
 dependencies = [
  "chrono",
  "frizbee",
@@ -1215,7 +1215,7 @@ dependencies = [
 
 [[package]]
 name = "onoma-bridge"
-version = "0.0.14"
+version = "0.0.15"
 dependencies = [
  "flexi_logger",
  "futures",
