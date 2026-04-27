@@ -133,7 +133,6 @@ return {
 				'StaticMethod',
 				'StaticProperty',
 				'StaticVariable',
-				'Variable', -- For functions defined using constants with arrow functions
 				'Struct',
 				'Trait',
 				'TraitMethod',
@@ -169,7 +168,6 @@ return {
 				'StaticMethod',
 				'StaticProperty',
 				'StaticVariable',
-				'Variable', -- For functions defined using constants with arrow functions
 				'Struct',
 				'Trait',
 				'TraitMethod',
@@ -205,7 +203,6 @@ return {
 				'StaticMethod',
 				'StaticProperty',
 				'StaticVariable',
-				'Variable', -- For functions defined using constants with arrow functions
 				'Struct',
 				'Trait',
 				'TraitMethod',
@@ -241,7 +238,6 @@ return {
 				'StaticMethod',
 				'StaticProperty',
 				'StaticVariable',
-				'Variable', -- For functions defined using constants with arrow functions
 				'Struct',
 				'Trait',
 				'TraitMethod',
