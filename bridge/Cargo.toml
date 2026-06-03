@@ -9,7 +9,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 flexi_logger = "0.31.9"
-log = "0.4.28"
+log = "0.4.30"
 mlua = { version = "0.11.6", features = [
     "luajit",
     "module",
