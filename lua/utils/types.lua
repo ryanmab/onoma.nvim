@@ -1,0 +1,122 @@
+---@class onoma.Watcher
+---@field start fun(self: onoma.Watcher): nil Starts the watcher asynchronously.
+---@field stop_blocking fun(self: onoma.Watcher): nil Stops the watcher
+
+---@class onoma.Resolver
+---@field query fun(self: onoma.Resolver, query: string, context: onoma.QueryContext): onoma.ReceiverStream Queries symbols based on the provided query and context.
+
+---@class onoma.QueryContext
+---@field file_path string|nil The path of the current file focussed (if any).
+---@field symbol_kinds onoma.SymbolKind[] The kinds of symbols to include in the query
+
+---@class onoma.ReceiverStream
+---@field next fun(self: onoma.ReceiverStream): onoma.ResolvedSymbol|nil|any Retrieves the next symbol from the stream. Returns nil when the stream is exhausted.
+
+---@class onoma.ResolvedSymbol
+---@field id number The unique identifier of the symbol.
+---@field kind onoma.SymbolKind The kind of the symbol (e.g., function, variable, class).
+---@field name string The name of the symbol.
+---@field path string The file path where the symbol is located.
+---@field start_line number The starting line number of the symbol in the file.
+---@field start_column number The starting column number of the symbol in the file.
+---@field end_line number The ending line number of the symbol in the file.
+---@field end_column number The ending column number of the symbol in the file.
+---@field score number The relevance score of the symbol for the query.
+
+---@class onoma.Bridge
+---@field get_watcher fun(directories: string[]): onoma.Watcher Creates a watcher for the specified directories.
+---@field get_resolver fun(directories: string[]): onoma.Resolver Creates a resolver
+---@field create_context fun(file_path: string|nil, symbol_kinds: {string: onoma.SymbolKind[]}|onoma.SymbolKind[]|nil): onoma.QueryContext Creates a query context.
+---@field log fun(level: 'TRACE' |'DEBUG' | 'INFO' | 'WARN' | 'ERROR', message: string): nil Logs a message from the Onoma bridge.
+---@field pending userdata A handle to be used for async operations.
+
+---@class onoma.Provider
+---@field setup fun(opts: onoma.Config)
+
+---@alias onoma.SymbolKind
+---| "Unknown"            # An unknown or unspecified symbol kind.
+---| "File"               # A source file.
+---| "Lang"               # A language declaration.
+---| "Package"            # A package declaration.
+---| "PackageObject"      # A package-level object.
+---| "Module"             # A module declaration.
+---| "Namespace"          # A namespace used to group symbols.
+---| "Grammar"            # A grammar definition.
+---| "Macro"              # A macro definition.
+---| "Attribute"          # A language attribute or annotation.
+---| "Concept"            # A C++20 concept.
+---| "Type"               # A type definition.
+---| "TypeAlias"          # A type alias.
+---| "TypeParameter"      # A generic type parameter.
+---| "TypeFamily"         # A type family declaration.
+---| "DataFamily"         # A data family declaration.
+---| "TypeClass"          # A type class definition.
+---| "Class"              # A class definition.
+---| "Struct"             # A struct type.
+---| "Enum"               # An enumeration type.
+---| "Error"              # An error type.
+---| "Interface"          # An interface definition.
+---| "Protocol"           # A protocol definition.
+---| "Trait"              # A trait definition.
+---| "Mixin"              # A mixin declaration.
+---| "Extension"          # An extension declaration.
+---| "Contract"           # A Solidity contract.
+---| "Library"            # A Solidity library.
+---| "Message"            # A Protobuf message definition.
+---| "Delegate"           # A delegate type.
+---| "Signature"          # An Alloy signature.
+---| "SingletonClass"     # A Ruby singleton class.
+---| "Instance"           # A type class or trait instance.
+---| "AssociatedType"     # A type associated with another type.
+---| "Union"              # A union type.
+---| "Value"              # A value-level symbol.
+---| "Variable"           # A variable binding.
+---| "Constant"           # A constant value.
+---| "Number"             # A numeric value or type.
+---| "String"             # A string value or type.
+---| "Boolean"            # A boolean value or type.
+---| "Null"               # A null or absent value.
+---| "Array"              # An array type or value.
+---| "Object"             # An object value.
+---| "Key"                # A key in a key-value structure.
+---| "Operator"           # An operator symbol.
+---| "Pattern"            # A pattern synonym.
+---| "Field"              # A field declared within a struct or class.
+---| "StaticField"        # A static field.
+---| "StaticVariable"     # A static variable.
+---| "StaticDataMember"   # A static data member.
+---| "Property"           # A property symbol.
+---| "StaticProperty"     # A static property.
+---| "EnumMember"         # A single member of an enumeration.
+---| "Subscript"          # A subscript.
+---| "Accessor"           # An automatically generated accessor.
+---| "Getter"             # A getter accessor.
+---| "Setter"             # A setter accessor.
+---| "Parameter"          # A function or method parameter.
+---| "ParameterLabel"     # A labeled parameter.
+---| "SelfParameter"      # The `self` parameter in methods.
+---| "ThisParameter"      # A `this` receiver parameter.
+---| "MethodReceiver"     # A method receiver without a conventional name.
+---| "Function"           # A free-standing function.
+---| "Method"             # A method associated with a type.
+---| "StaticMethod"       # A static method.
+---| "Constructor"        # A constructor used to create instances.
+---| "MethodSpecification"# A method specification without implementation.
+---| "TraitMethod"        # A trait method without implementation.
+---| "ProtocolMethod"     # A protocol method without implementation.
+---| "TypeClassMethod"    # A method belonging to a type class.
+---| "AbstractMethod"     # A method which may or may not have an implementation.
+---| "PureVirtualMethod"  # A pure virtual method.
+---| "MethodAlias"        # A method alias.
+---| "SingletonMethod"    # A Ruby singleton method.
+---| "Event"              # An event symbol.
+---| "StaticEvent"        # A static event.
+---| "Modifier"           # A Solidity modifier.
+---| "Predicate"          # A logical predicate.
+---| "Assertion"          # A logical assertion.
+---| "Fact"               # A logical fact.
+---| "Axiom"              # A foundational logical axiom.
+---| "Lemma"              # A lemma in formal proofs.
+---| "Theorem"            # A proven theorem.
+---| "Tactic"             # A proof tactic.
+---| "Quasiquoter"        # A Haskell quasiquoter.
