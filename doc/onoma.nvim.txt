@@ -1,4 +1,5 @@
-*onoma.nvim.txt*        For Neovim >= 0.10.0        Last change: 2026 March 02
+*onoma.nvim.txt*
+                             For Neovim >= 0.10.0    Last change: 2026 June 15
 
 ==============================================================================
 Table of Contents                               *onoma.nvim-table-of-contents*
@@ -28,8 +29,8 @@ Onoma.nvim is a Neovim plugin built around Onoma
 indexer and fuzzy finder, which doesn’t require a full language server or
 limit workspace-wide searches.
 
-It provides a first-class integration into Neovim, using Snacks Picker as the
-frontend for fuzzy finding semantic symbols in source code.
+It provides a first-class integration into Neovim, using Snacks Picker or
+Telescope as the frontend for fuzzy finding semantic symbols in source code.
 
 
 SUPPORTED LANGUAGES                *onoma.nvim-onoma.nvim-supported-languages*
@@ -53,31 +54,56 @@ INSTALLATION                              *onoma.nvim-onoma.nvim-installation*
 
 LAZY.NVIM ~
 
+
+SNACKS
+
 >lua
     return {
-         'ryanmab/onoma.nvim',
+        'ryanmab/onoma.nvim',
     
-         version = '*', -- Required when using prebuilt binaries
+        version = '*', -- Required when using prebuilt binaries
     
-         -- Otherwise, you can build from source
-         -- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
+        -- Otherwise, you can build from source
+        -- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
     
-         dependencies = {
-              'folke/snacks.nvim', -- Required if using the Onoma source for Snacks Picker
-         },
-         event = 'VeryLazy',
-         config = function()
-              require('onoma').setup({
-                   -- Default configuration can be found in: "lua/config.lua"
-              })
+        dependencies = {
+            'folke/snacks.nvim',
+        },
+        event = 'VeryLazy',
+        config = function()
+            require('onoma').setup({
+                -- Default configuration can be found in: "lua/config.lua"
+                picker = { 'snacks' },
+            })
     
-              vim.keymap.set(
-                   { 'n', 'v', 'x' },
-                   'fs',
-                   function() Snacks.picker.onoma({}) end,
-                   { desc = 'Symbols', silent = true }
-              )
-         end,
+            vim.keymap.set({ 'n', 'v', 'x' }, 'fs', Snacks.picker.get_symbols, { desc = 'Symbols', silent = true })
+        end,
+    }
+<
+
+
+TELESCOPE
+
+>lua
+    return {
+        'ryanmab/onoma.nvim',
+    
+        version = '*', -- Required when using prebuilt binaries
+    
+        -- Otherwise, you can build from source
+        -- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
+    
+        dependencies = {
+            'nvim-telescope/telescope.nvim',
+        },
+        event = 'VeryLazy',
+        config = function()
+            vim.keymap.set({ 'n', 'v', 'x' }, 'fs', function()
+                require('telescope').extensions.onoma.get_symbols({
+                    -- Default configuration can be found in: "lua/config.lua"
+                })
+            end, { desc = 'Symbols', silent = true })
+        end,
     }
 <
 
