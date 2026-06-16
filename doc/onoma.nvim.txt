@@ -1,5 +1,5 @@
 *onoma.nvim.txt*
-                             For Neovim >= 0.10.0    Last change: 2026 June 15
+                             For Neovim >= 0.10.0    Last change: 2026 June 16
 
 ==============================================================================
 Table of Contents                               *onoma.nvim-table-of-contents*
@@ -124,6 +124,7 @@ ACKNOWLEDGMENTS                        *onoma.nvim-onoma.nvim-acknowledgments*
 
 - fff.nvim <https://github.com/dmtrKovalenko/fff.nvim/tree/main> for inspiring the semantic fuzzy finder design in Onoma.
 - snacks.nvim <https://github.com/folke/snacks.nvim/tree/main> for the excellent picker frontend.
+- telescope.nvim <https://github.com/nvim-telescope/telescope.nvim> for the excellent picker frontend.
 - frizbee <https://github.com/saghen/frizbee> for the high-performance SIMD implementation of fuzzy matching.
 
 ==============================================================================

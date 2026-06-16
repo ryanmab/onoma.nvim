@@ -35,8 +35,6 @@ function M.get_symbols(resolver, opts)
 				if type(item) == 'userdata' then
 					---@cast item onoma.ResolvedSymbol
 					table.insert(locations, {
-						value = item.name,
-
 						-- There is a bug in Telescope which means multi-line results
 						-- cause unhandled cursor position errors, and so, we need to strip
 						-- out any new lines from the result before it is returned.
@@ -45,13 +43,13 @@ function M.get_symbols(resolver, opts)
 						--  _only_ trailing whitespace is guaranteed to be removed).
 						--
 						-- See: https://github.com/nvim-telescope/telescope.nvim/issues/3163#issuecomment-2167678288
-						display = item.name:gsub('\n', ' '),
+						symbol_name = item.name:gsub('\n', ' '),
+						symbol_kind = item.kind,
+						path = item.path,
 
 						ordinal = item.score,
-						path = item.path,
 						lnum = item.start_line,
 						col = item.start_column,
-						symbol_type = item.kind,
 					})
 				end
 			end

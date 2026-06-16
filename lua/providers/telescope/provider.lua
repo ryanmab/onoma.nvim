@@ -47,9 +47,7 @@ return {
 						prompt_title = opts.telescope.prompt_title,
 
 						finder = finders.new_dynamic({
-							entry_maker = function(entry)
-								return entry
-							end,
+							entry_maker = require('providers.telescope.format').lsp_symbol(),
 							fn = require('providers.telescope.finder').get_symbols(resolver, opts),
 						}),
 						sorter = require('telescope.sorters').Sorter:new({
@@ -57,6 +55,7 @@ return {
 							scoring_function = function(_, _, ordinal)
 								return 1 / ordinal
 							end,
+							highlighter = require('providers.telescope.format').substr_highlighter(),
 						}),
 						previewer = require('telescope.config').values.qflist_previewer({}),
 						tiebreak = function()
