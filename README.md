@@ -98,4 +98,5 @@ in the respective editor repositories.
 
 - [fff.nvim](https://github.com/dmtrKovalenko/fff.nvim/tree/main) for inspiring the semantic fuzzy finder design in Onoma.
 - [snacks.nvim](https://github.com/folke/snacks.nvim/tree/main) for the excellent picker frontend.
+- [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) for the excellent picker frontend.
 - [frizbee](https://github.com/saghen/frizbee) for the high-performance SIMD implementation of fuzzy matching.
