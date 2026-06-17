@@ -80,8 +80,5 @@ return {
 		})
 
 		Snacks.picker.sources.get_symbols = get_symbols(resolver, opts)
-
-		-- Maintained for backwards compatibility with v0.0.19
-		Snacks.picker.sources.onoma = get_symbols(resolver, opts)
 	end,
 }
