@@ -93,7 +93,7 @@ jobs:
             artifact_name: target/aarch64-apple-darwin/release/libonoma_bridge.dylib
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install stable
         uses: dtolnay/rust-toolchain@stable
@@ -139,7 +139,7 @@ jobs:
             artifact_name: target/aarch64-pc-windows-msvc/release/onoma_bridge.dll
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install stable
         uses: dtolnay/rust-toolchain@stable
@@ -197,7 +197,7 @@ jobs:
           #   artifact_name: target/aarch64-linux-android/release/libonoma_bridge.so
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install stable
         uses: dtolnay/rust-toolchain@stable
