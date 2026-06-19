@@ -1,6 +1,6 @@
 [package]
 name = "onoma-bridge"
-version = "0.0.21"
+version = "0.0.22"
 edition = "2024"
 rust-version = "1.88.0"
 
