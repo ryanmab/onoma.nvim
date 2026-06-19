@@ -75,7 +75,6 @@ return {
 			'Interface',
 			'Method',
 			'Module',
-			'Property',
 			'Setter',
 			'TypeAlias',
 		},
@@ -90,7 +89,6 @@ return {
 			'Interface',
 			'Method',
 			'Module',
-			'Property',
 			'Setter',
 			'TypeAlias',
 		},
@@ -102,7 +100,6 @@ return {
 			'Getter',
 			'Method',
 			'Module',
-			'Property',
 			'Setter',
 		},
 		javascriptjsx = {
@@ -113,7 +110,6 @@ return {
 			'Getter',
 			'Method',
 			'Module',
-			'Property',
 			'Setter',
 		},
 		clojure = {
