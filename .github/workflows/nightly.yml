@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build (nightly)
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install nightly
         uses: dtolnay/rust-toolchain@nightly
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Update (beta / updated)
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install beta
         uses: dtolnay/rust-toolchain@beta
