@@ -58,18 +58,18 @@ return {
 
 		local project_directory = { vim.fn.getcwd() }
 
-		local resolver = Async(function()
-			local ok, watcher = pcall(Onoma.new_watcher, project_directory)
+		local resolver, watcher = unpack(Async(function()
+			return {
+				Onoma.new_resolver(project_directory),
+				Onoma.new_watcher(project_directory),
+			}
+		end):await())
 
-			if not ok then
-				error('Failed to setup and start watcher: ' .. tostring(watcher))
-			end
-
-			-- Start a new watcher, ready to index files for the resolver to consume
+		Async(function()
+			-- Start a new watcher asynchronously, ready to index files for
+			-- the resolver to consume
 			watcher:start()
-
-			return Onoma.new_resolver(project_directory)
-		end):await()
+		end):run()
 
 		Snacks.picker.sources.get_symbols = get_symbols(resolver, opts)
 	end,
