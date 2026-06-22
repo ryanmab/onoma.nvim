@@ -12,29 +12,21 @@ return {
 	setup = function()
 		local Async = require('utils.async')
 		local Onoma = require('utils.onoma')
-		local log = require('utils.log')
 
-		local resolver, watcher = Async(function()
-			return Onoma.new_resolver({ vim.fn.getcwd() }), Onoma.new_watcher({ vim.fn.getcwd() })
+		local project_directory = { vim.fn.getcwd() }
+
+		local resolver = Async(function()
+			local ok, watcher = pcall(Onoma.new_watcher, project_directory)
+
+			if not ok then
+				error('Failed to setup and start watcher: ' .. tostring(watcher))
+			end
+
+			-- Start a new watcher, ready to index files for the resolver to consume
+			watcher:start()
+
+			return Onoma.new_resolver(project_directory)
 		end):await()
-
-		vim.api.nvim_create_autocmd('VimLeavePre', {
-			group = vim.api.nvim_create_augroup('onoma_watcher', { clear = true }),
-			callback = function()
-				log.trace('Vim is exiting')
-
-				if watcher then
-					local ok, err = pcall(watcher.stop_blocking, watcher)
-
-					if not ok then
-						log.error('Failed to stop watcher: ' .. tostring(err))
-						return
-					end
-
-					log.debug('Watcher has been cleaned up')
-				end
-			end,
-		})
 
 		return {
 			get_symbols = function(opts)
