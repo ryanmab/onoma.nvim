@@ -24,4 +24,5 @@ return {
 	error = function(message)
 		onoma().log('ERROR', message)
 	end,
+	flush = onoma().flush,
 }

@@ -45,7 +45,7 @@ function M.new_watcher(directories)
 			log.trace('Vim is exiting')
 
 			if watcher then
-				local ok, err = pcall(watcher.stop_blocking, watcher)
+				local ok, err = pcall(watcher.stop, watcher)
 
 				if not ok then
 					log.error('Failed to stop watcher: ' .. tostring(err))
@@ -53,6 +53,9 @@ function M.new_watcher(directories)
 				end
 
 				log.debug('Watcher has been cleaned up')
+
+				-- Since Vim is closing, we want to flush any buffered logs
+				log.flush()
 			end
 		end,
 	})
