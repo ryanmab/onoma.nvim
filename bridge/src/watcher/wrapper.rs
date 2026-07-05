@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use mlua::prelude::*;
 
-use crate::{logger, watcher::RUNTIME};
+use crate::watcher::RUNTIME;
 
 /// A newtype Lua binding for the [`onoma::watcher::Watcher`] struct.
 ///
@@ -37,31 +37,20 @@ where
     I: onoma::indexer::Indexer + Send + 'static,
 {
     fn add_methods<M: LuaUserDataMethods<Self>>(methods: &mut M) {
-        methods.add_async_method(
+        methods.add_async_method_mut(
             "start",
-            async |_lua, this: mlua::UserDataRef<Self>, (): ()| {
+            async |_lua, mut this: mlua::UserDataRefMut<Self>, (): ()| {
                 let _guard = RUNTIME.enter();
 
-                let (watcher_start, initial_index_run) =
-                    tokio::join!(this.start(), this.run_full_index());
+                this.start()
+                    .map_err(|err| mlua::Error::RuntimeError(err.to_string()))?;
 
-                watcher_start.map_err(|err| mlua::Error::RuntimeError(err.to_string()))?;
-                initial_index_run.map_err(|err| {
+                this.run_full_index().await.map_err(|err| {
                     mlua::Error::RuntimeError(format!("Initial indexing failed: {err:?}"))
                 })?;
 
                 mlua::Result::Ok(())
             },
         );
-
-        methods.add_method("stop_blocking", |_lua, this: &Self, (): ()| {
-            futures::executor::block_on(this.0.stop());
-
-            // This is usually called right before Vim is exited, and as such we should
-            // flush the logs onto disk eagerly
-            logger::flush();
-
-            mlua::Result::Ok(())
-        });
     }
 }

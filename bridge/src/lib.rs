@@ -37,6 +37,7 @@ fn onoma_bridge(lua: &Lua) -> LuaResult<LuaTable> {
 
     // Logging function for Lua to use
     exports.set("log", lua.create_function(logger::log)?)?;
+    exports.set("flush", lua.create_function(logger::flush)?)?;
 
     // Since Lua is responsible for driving the futures to completion, this is a helpful
     // binding which Lua coroutines can use to check if a returned value is a polling result

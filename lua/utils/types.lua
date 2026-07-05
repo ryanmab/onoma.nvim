@@ -1,6 +1,6 @@
 ---@class onoma.Watcher
 ---@field start fun(self: onoma.Watcher): nil Starts the watcher asynchronously.
----@field stop_blocking fun(self: onoma.Watcher): nil Stops the watcher
+---@field stop fun(self: onoma.Watcher): nil Stops the watcher
 
 ---@class onoma.Resolver
 ---@field query fun(self: onoma.Resolver, query: string, context: onoma.QueryContext): onoma.ReceiverStream Queries symbols based on the provided query and context.
@@ -28,6 +28,7 @@
 ---@field get_resolver fun(directories: string[]): onoma.Resolver Creates a resolver
 ---@field create_context fun(file_path: string|nil, symbol_kinds: {string: onoma.SymbolKind[]}|onoma.SymbolKind[]|nil): onoma.QueryContext Creates a query context.
 ---@field log fun(level: 'TRACE' |'DEBUG' | 'INFO' | 'WARN' | 'ERROR', message: string): nil Logs a message from the Onoma bridge.
+---@field flush fun(): nil Flush any logs which are currently buffered
 ---@field pending userdata A handle to be used for async operations.
 
 ---@class onoma.Provider

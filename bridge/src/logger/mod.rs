@@ -65,8 +65,11 @@ pub fn init() {
 }
 
 /// Flush the log buffer
-pub fn flush() {
+#[allow(clippy::unnecessary_wraps)]
+pub fn flush(_lua: &mlua::Lua, _: ()) -> mlua::Result<()> {
     LOGGER.flush();
+
+    Ok(())
 }
 
 /// Write a log message to the log file.
