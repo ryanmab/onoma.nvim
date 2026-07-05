@@ -451,7 +451,7 @@ version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ca1f7b0dce1c25254457f2edcfcf611bf207113564b96f90659a3f54506016b2"
 dependencies = [
- "itertools",
+ "itertools 0.14.0",
  "raw-cpuid",
 ]
 
@@ -899,6 +899,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8b4baf93f58d4425749ca49a51c50ebab072c5df6994d08fed93541c331481dc"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1205,16 +1214,16 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
 name = "onoma"
-version = "0.0.20"
+version = "0.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a40d872b26a7a0d6e1eac3179f230ecf0c998ffbb80499830e5e82d05d5ca6c"
+checksum = "16222409fef7d7496f614a718e0027472b4b15aee150d875cb5c8c385a1a7aa1"
 dependencies = [
  "chrono",
  "frizbee",
  "hex",
  "ignore",
  "ignored",
- "itertools",
+ "itertools 0.15.0",
  "log",
  "notify",
  "notify-debouncer-mini",
