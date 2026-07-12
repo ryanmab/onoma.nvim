@@ -1,9 +1,12 @@
-use std::{path::PathBuf, sync::LazyLock};
+use std::{
+    path::PathBuf,
+    sync::{Arc, LazyLock},
+};
 
 use mlua::prelude::*;
 
 use onoma::indexer::DatabaseBackedIndexer;
-use tokio::runtime;
+use tokio::{runtime, sync::RwLock};
 
 mod wrapper;
 
@@ -56,5 +59,5 @@ pub async fn get_watcher(
 
     log::info!("Created watcher for indexed directories");
 
-    Ok(wrapper::Watcher(watcher))
+    Ok(wrapper::Watcher(Arc::new(RwLock::new(watcher))))
 }

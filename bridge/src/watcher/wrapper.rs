@@ -1,6 +1,7 @@
-use std::ops::{Deref, DerefMut};
+use std::{ops::Deref, sync::Arc};
 
 use mlua::prelude::*;
+use tokio::sync::RwLock;
 
 use crate::watcher::RUNTIME;
 
@@ -8,24 +9,15 @@ use crate::watcher::RUNTIME;
 ///
 /// This struct can be safely returned from Rust to Lua,
 /// and Rust methods on the struct can be called by Lua.
-pub struct Watcher<I>(pub(super) onoma::watcher::Watcher<I>)
+pub struct Watcher<I>(pub(super) Arc<RwLock<onoma::watcher::Watcher<I>>>)
 where
     I: onoma::indexer::Indexer + Send + 'static;
-
-impl<I> DerefMut for Watcher<I>
-where
-    I: onoma::indexer::Indexer + Send + 'static,
-{
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
 
 impl<I> Deref for Watcher<I>
 where
     I: onoma::indexer::Indexer + Send + 'static,
 {
-    type Target = onoma::watcher::Watcher<I>;
+    type Target = Arc<RwLock<onoma::watcher::Watcher<I>>>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -37,17 +29,23 @@ where
     I: onoma::indexer::Indexer + Send + 'static,
 {
     fn add_methods<M: LuaUserDataMethods<Self>>(methods: &mut M) {
-        methods.add_async_method_mut(
+        methods.add_async_method(
             "start",
-            async |_lua, mut this: mlua::UserDataRefMut<Self>, (): ()| {
+            async |_lua, this: mlua::UserDataRef<Self>, (): ()| {
                 let _guard = RUNTIME.enter();
 
-                this.start()
+                this.write()
+                    .await
+                    .start()
                     .map_err(|err| mlua::Error::RuntimeError(err.to_string()))?;
 
-                this.run_full_index().await.map_err(|err| {
-                    mlua::Error::RuntimeError(format!("Initial indexing failed: {err:?}"))
-                })?;
+                let watcher = Arc::clone(&this.0);
+
+                tokio::spawn(async move {
+                    let _ = watcher.read().await.run_full_index().await.map_err(|err| {
+                        mlua::Error::RuntimeError(format!("Initial indexing failed: {err:?}"))
+                    });
+                });
 
                 mlua::Result::Ok(())
             },

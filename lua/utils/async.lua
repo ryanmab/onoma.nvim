@@ -90,7 +90,7 @@ local function new_task(fn)
 	end
 
 	function task:start()
-		step()
+		schedule(step)
 	end
 
 	return task
