@@ -16,49 +16,36 @@ return {
 
 		local project_directory = { vim.fn.getcwd() }
 
+		log.info('Initialising Telescope integration for: ' .. table.concat(project_directory, ', '))
+
 		local resolver, watcher = unpack(Async(function()
-			local ok, err = pcall(Onoma, 'new_resolver', project_directory)
+			local ok, resolver = pcall(Onoma.new_resolver, project_directory)
 			if not ok then
-				log.error(
-					'Failed to create resolver for directories: '
-						.. table.concat(project_directory, ', ')
-						.. '. Error: '
-						.. err
-				)
+				log.error('Failed to create resolver: ' .. resolver)
 			end
 
-			local ok, err = pcall(Onoma, 'new_watcher', project_directory)
+			local ok, watcher = pcall(Onoma.new_watcher, project_directory)
 			if not ok then
-				log.error(
-					'Failed to create watcher for directories: '
-						.. table.concat(project_directory, ', ')
-						.. '. Error: '
-						.. err
-				)
+				log.error('Failed to create watcher: ' .. watcher)
 			end
+
+			return {
+				resolver,
+				watcher,
+			}
 		end):await())
 
 		Async(function()
-			local ok, err = pcall(watcher, 'start')
+			local ok, err = pcall(watcher.start, watcher)
 
 			if not ok then
-				log.error(
-					'Failed to start watcher for directories: '
-						.. table.concat(project_directory, ', ')
-						.. '. Error: '
-						.. err
-				)
+				log.error('Failed to start watcher: ' .. err)
 			end
 
-			local ok, err = pcall(watcher, 'run_full_index')
+			local ok, err = pcall(watcher.run_full_index, watcher)
 
 			if not ok then
-				log.error(
-					'Failed to run full index for directories '
-						.. table.concat(project_directory, ', ')
-						.. '. Error: '
-						.. err
-				)
+				log.error('Failed to run full index: ' .. err)
 			end
 		end):run()
 
