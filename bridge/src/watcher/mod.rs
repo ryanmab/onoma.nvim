@@ -48,16 +48,14 @@ pub async fn get_watcher(
         directories.iter().map(PathBuf::as_path),
     )
     .await
-    .map_err(|err| mlua::Error::runtime(format!("Failed to create indexer for: {err}")))?;
+    .map_err(|err| mlua::Error::runtime(format!("Failed to create indexer: {err}")))?;
 
-    log::info!(
+    log::trace!(
         "Created indexer with database path at {}",
         &DATABASE_PATH.display()
     );
 
-    let watcher = onoma::watcher::Watcher::new(indexer);
-
-    log::info!("Created watcher for indexed directories");
-
-    Ok(wrapper::Watcher(Arc::new(RwLock::new(watcher))))
+    Ok(wrapper::Watcher(Arc::new(RwLock::new(
+        onoma::watcher::Watcher::new(indexer),
+    ))))
 }

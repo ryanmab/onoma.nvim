@@ -51,6 +51,7 @@ return {
 	setup = function(opts)
 		local Async = require('utils.async')
 		local Onoma = require('utils.onoma')
+		local log = require('utils.log')
 
 		if not Snacks or not pcall(require, 'snacks.picker') then
 			error('Cannot register pickers as Snacks is not enabled')
@@ -58,17 +59,39 @@ return {
 
 		local project_directory = { vim.fn.getcwd() }
 
+		log.info('Initialising Snacks integration for: ' .. table.concat(project_directory, ', '))
+
 		local resolver, watcher = unpack(Async(function()
+			local ok, resolver = pcall(Onoma.new_resolver, project_directory)
+			if not ok then
+				log.error('Failed to create resolver: ' .. resolver)
+				return { nil, nil }
+			end
+
+			local ok, watcher = pcall(Onoma.new_watcher, project_directory)
+			if not ok then
+				log.error('Failed to create watcher: ' .. watcher)
+				return { nil, nil }
+			end
+
 			return {
-				Onoma.new_resolver(project_directory),
-				Onoma.new_watcher(project_directory),
+				resolver,
+				watcher,
 			}
 		end):await())
 
 		Async(function()
-			-- Start a new watcher asynchronously, ready to index files for
-			-- the resolver to consume
-			watcher:start()
+			local ok, err = pcall(watcher.start, watcher)
+
+			if not ok then
+				log.error('Failed to start watcher: ' .. err)
+			end
+
+			local ok, err = pcall(watcher.run_full_index, watcher)
+
+			if not ok then
+				log.error('Failed to run full index: ' .. err)
+			end
 		end):run()
 
 		Snacks.picker.sources.get_symbols = get_symbols(resolver, opts)
