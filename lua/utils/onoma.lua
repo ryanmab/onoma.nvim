@@ -8,12 +8,11 @@ function M.new_resolver(directories)
 
 	local ok, onoma = pcall(utils.load_bridge)
 	if not ok or onoma == nil then
-		vim.notify_once('Onoma did not load correctly: ' .. onoma, vim.log.levels.ERROR)
-		error()
+		error('Onoma did not load correctly: ' .. onoma)
 	end
 
 	local resolver = onoma.get_resolver(directories)
-	log.debug('Resolver created at: ' .. os.date('%Y-%m-%d %H:%M:%S'))
+	log.debug('Resolver created for: ' .. table.concat(directories, ', '))
 
 	return resolver
 end
@@ -26,18 +25,16 @@ function M.new_watcher(directories)
 
 	local ok, onoma = pcall(utils.load_bridge)
 	if not ok or onoma == nil then
-		vim.notify_once('Onoma did not load correctly: ' .. onoma, vim.log.levels.ERROR)
-		error()
+		error('Onoma did not load correctly: ' .. onoma)
 	end
 
 	local watcher = onoma.get_watcher(directories)
 
 	if not watcher then
-		log.error('Failed to create watcher for directories: ' .. table.concat(directories, ', '))
-		error()
+		error('Failed to create watcher for directories: ' .. table.concat(directories, ', '))
 	end
 
-	log.debug('Watcher created at: ' .. os.date('%Y-%m-%d %H:%M:%S'))
+	log.debug('Watcher created for: ' .. table.concat(directories, ', '))
 
 	vim.api.nvim_create_autocmd('VimLeavePre', {
 		group = vim.api.nvim_create_augroup('onoma_watcher', { clear = true }),

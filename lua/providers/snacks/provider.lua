@@ -51,6 +51,7 @@ return {
 	setup = function(opts)
 		local Async = require('utils.async')
 		local Onoma = require('utils.onoma')
+		local log = require('utils.log')
 
 		if not Snacks or not pcall(require, 'snacks.picker') then
 			error('Cannot register pickers as Snacks is not enabled')
@@ -59,16 +60,49 @@ return {
 		local project_directory = { vim.fn.getcwd() }
 
 		local resolver, watcher = unpack(Async(function()
-			return {
-				Onoma.new_resolver(project_directory),
-				Onoma.new_watcher(project_directory),
-			}
+			local ok, err = pcall(Onoma, 'new_resolver', project_directory)
+			if not ok then
+				log.error(
+					'Failed to create resolver for directories: '
+						.. table.concat(project_directory, ', ')
+						.. '. Error: '
+						.. err
+				)
+			end
+
+			local ok, err = pcall(Onoma, 'new_watcher', project_directory)
+			if not ok then
+				log.error(
+					'Failed to create watcher for directories: '
+						.. table.concat(project_directory, ', ')
+						.. '. Error: '
+						.. err
+				)
+			end
 		end):await())
 
 		Async(function()
-			-- Start a new watcher asynchronously, ready to index files for
-			-- the resolver to consume
-			watcher:start()
+			local ok, err = pcall(watcher, 'start')
+
+			if not ok then
+				log.error(
+					'Failed to start watcher for directories: '
+						.. table.concat(project_directory, ', ')
+						.. '. Error: '
+						.. err
+				)
+			end
+
+			local ok, err = pcall(watcher, 'run_full_index')
+
+			if not ok then
+				log.error(
+					'Failed to run full index for directories '
+						.. table.concat(project_directory, ', ')
+						.. '. Error: '
+						.. err
+				)
+			end
 		end):run()
 
 		Snacks.picker.sources.get_symbols = get_symbols(resolver, opts)

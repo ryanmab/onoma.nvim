@@ -39,6 +39,15 @@ where
                     .start()
                     .map_err(|err| mlua::Error::RuntimeError(err.to_string()))?;
 
+                mlua::Result::Ok(())
+            },
+        );
+
+        methods.add_async_method(
+            "run_full_index",
+            async |_lua, this: mlua::UserDataRef<Self>, (): ()| {
+                let _guard = RUNTIME.enter();
+
                 let watcher = Arc::clone(&this.0);
 
                 tokio::spawn(async move {
