@@ -59,5 +59,16 @@ where
                 mlua::Result::Ok(())
             },
         );
+
+        methods.add_async_method(
+            "stop",
+            async |_lua, this: mlua::UserDataRef<Self>, (): ()| {
+                let _guard = RUNTIME.enter();
+
+                this.write().await.stop();
+
+                mlua::Result::Ok(())
+            },
+        );
     }
 }

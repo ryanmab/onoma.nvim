@@ -52,7 +52,7 @@ function M.new_watcher(directories)
 					return
 				end
 
-				log.debug('Watcher has been cleaned up')
+				log.trace('Watcher has been cleaned up')
 
 				-- Since Vim is closing, we want to flush any buffered logs
 				log.flush()
