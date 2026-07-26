@@ -41,8 +41,6 @@ pub fn get_resolver(
         directories.iter().map(PathBuf::as_path),
     );
 
-    log::info!("Created resolver for indexed directories");
-
     Ok(wrapper::Resolver(resolver))
 }
 
@@ -61,7 +59,7 @@ pub fn create_context(
         context = context.with_symbol_kinds(symbol_kinds.into());
     }
 
-    log::info!("Context created with: {:?}", &context);
+    log::trace!("Context created with: {context:?}");
 
     Ok(wrapper::Context(context))
 }
