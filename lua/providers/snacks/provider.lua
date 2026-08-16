@@ -4,7 +4,7 @@
 ---@param opts onoma.Config
 ---@return snacks.picker.Config
 local function get_symbols(resolver, opts)
-	return {
+	return vim.tbl_deep_extend('force', {
 		live = true,
 		title = opts.snacks.title,
 		finder = function(picker, ctx)
@@ -43,7 +43,7 @@ local function get_symbols(resolver, opts)
 			proc = opts.debug, -- Show proc debug info
 			extmarks = opts.debug, -- Show extmarks errors
 		},
-	}
+	}, require('providers.snacks.layouts.' .. opts.snacks.layout).get_layout())
 end
 
 ---@type onoma.SnacksProvider
