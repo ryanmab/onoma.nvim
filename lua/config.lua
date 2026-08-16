@@ -2,6 +2,7 @@
 
 ---@class onoma.SnacksConfig
 ---@field title? string
+---@field layout? "float" | "bottom"
 
 ---@class onoma.TelescopeConfig
 ---@field results_title? string
@@ -21,6 +22,7 @@ return {
 	debug = false,
 	snacks = {
 		title = 'Symbols (Onoma)',
+		layout = 'float',
 	},
 	telescope = {
 		results_title = 'Symbols (Onoma)',

@@ -73,6 +73,8 @@ end
 function M.lsp_symbol(item, picker)
 	local ret = {}
 
+	ret[#ret + 1] = { ' ' }
+
 	local kind = item.lsp_kind or item.kind or 'Unknown' ---@type string
 	kind = picker.opts.icons.kinds[kind] and kind or 'Unknown'
 
