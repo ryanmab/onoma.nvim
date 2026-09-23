@@ -2,7 +2,11 @@ local M = {}
 
 ---@param opts onoma.Config
 function M.setup(opts)
+	local Onoma = require('utils.onoma')
+
 	opts = vim.tbl_deep_extend('force', require('config'), opts == nil and {} or opts)
+
+	Onoma.set_debug_mode(opts.debug)
 
 	---@type onoma.Picker[]
 	local pickers = {}

@@ -4,9 +4,15 @@ use flexi_logger::{FileSpec, Logger, LoggerHandle, WriteMode};
 
 mod wrapper;
 
+#[derive(Clone, Copy, Debug)]
+pub enum CaptureLevel {
+    Info,
+    Debug,
+}
+
 /// The global Logging context shared between Rust and Lua.
 static LOGGER: LazyLock<LoggerHandle> = LazyLock::new(|| {
-    let pattern = "onoma_bridge=debug, onoma=debug";
+    let pattern = "onoma_bridge=info, onoma=info";
 
     let path = xdir::state().map_or_else(
         || PathBuf::from("./onoma/logs"),
@@ -62,6 +68,17 @@ pub fn init() {
 
         default_panic(panic_info);
     }));
+}
+
+pub fn set_capture_level(mode: CaptureLevel) {
+    let spec = match mode {
+        CaptureLevel::Info => "onoma_bridge=info, onoma=info",
+        CaptureLevel::Debug => "onoma_bridge=debug, onoma=debug",
+    };
+
+    LOGGER
+        .parse_new_spec(spec)
+        .expect("Parsing log spec should never fail");
 }
 
 /// Flush the log buffer
