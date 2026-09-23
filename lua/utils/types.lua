@@ -27,6 +27,7 @@
 ---@field get_watcher fun(directories: string[]): onoma.Watcher Creates a watcher for the specified directories.
 ---@field get_resolver fun(directories: string[]): onoma.Resolver Creates a resolver
 ---@field create_context fun(file_path: string|nil, symbol_kinds: {string: onoma.SymbolKind[]}|onoma.SymbolKind[]|nil): onoma.QueryContext Creates a query context.
+---@field set_debug_mode fun(debug: boolean): nil Enables or disables debug mode for the Onoma bridge.
 ---@field log fun(level: 'TRACE' |'DEBUG' | 'INFO' | 'WARN' | 'ERROR', message: string): nil Logs a message from the Onoma bridge.
 ---@field flush fun(): nil Flush any logs which are currently buffered
 ---@field pending userdata A handle to be used for async operations.

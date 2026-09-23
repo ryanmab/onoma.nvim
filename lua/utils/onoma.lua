@@ -1,5 +1,18 @@
 local M = {}
 
+---@param debug boolean
+function M.set_debug_mode(debug)
+	local utils = require('bridge.utils')
+
+	local ok, onoma = pcall(utils.load_bridge)
+	if not ok or onoma == nil then
+		vim.notify_once('Onoma did not load correctly: ' .. onoma, vim.log.levels.ERROR)
+		error()
+	end
+
+	onoma.set_debug_mode(debug)
+end
+
 ---@param directories string[]
 ---@return onoma.Resolver
 function M.new_resolver(directories)

@@ -35,6 +35,19 @@ fn onoma_bridge(lua: &Lua) -> LuaResult<LuaTable> {
         lua.create_function(resolver::create_context)?,
     )?;
 
+    exports.set(
+        "set_debug_mode",
+        lua.create_function(|_, debug: bool| {
+            if debug {
+                logger::set_capture_level(logger::CaptureLevel::Debug);
+            } else {
+                logger::set_capture_level(logger::CaptureLevel::Info);
+            }
+
+            Ok(())
+        })?,
+    )?;
+
     // Logging function for Lua to use
     exports.set("log", lua.create_function(logger::log)?)?;
     exports.set("flush", lua.create_function(logger::flush)?)?;
