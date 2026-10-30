@@ -1,8 +1,6 @@
-use std::{
-    collections::HashMap,
-    ops::{Deref, DerefMut},
-    str::FromStr,
-};
+use std::collections::HashMap;
+use std::ops::{Deref, DerefMut};
+use std::str::FromStr;
 
 use mlua::prelude::*;
 use onoma::models::{self};

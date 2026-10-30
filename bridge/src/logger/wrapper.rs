@@ -1,4 +1,5 @@
-use std::{ops::Deref, str::FromStr};
+use std::ops::Deref;
+use std::str::FromStr;
 
 pub struct Level(log::Level);
 
