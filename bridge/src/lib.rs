@@ -3,7 +3,20 @@
 #![deny(clippy::all)]
 #![warn(clippy::pedantic)]
 #![warn(clippy::nursery)]
-#![warn(missing_debug_implementations, rust_2018_idioms, rustdoc::all)]
+#![warn(
+    clippy::borrowed_box,
+    clippy::should_implement_trait,
+    clippy::new_without_default,
+    clippy::wrong_self_convention,
+    clippy::len_without_is_empty,
+    clippy::exhaustive_enums
+)]
+#![warn(
+    missing_debug_implementations,
+    missing_copy_implementations,
+    rust_2018_idioms,
+    rustdoc::all
+)]
 #![allow(rustdoc::private_doc_tests)]
 #![forbid(unsafe_code)]
 

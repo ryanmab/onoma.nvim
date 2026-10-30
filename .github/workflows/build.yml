@@ -21,8 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install stable
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install nightly
+        uses: dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
 
@@ -33,7 +33,7 @@ jobs:
           args: --check ./lua
 
       - name: cargo fmt --check
-        run: cargo +stable fmt --check
+        run: cargo +nightly fmt --check
 
       - name: cargo-semver-checks
         uses: obi1kenobi/cargo-semver-checks-action@v2

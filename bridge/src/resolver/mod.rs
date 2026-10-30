@@ -1,9 +1,11 @@
-use std::{path::PathBuf, sync::LazyLock};
+use std::path::PathBuf;
+use std::sync::LazyLock;
 
 use mlua::prelude::*;
 use onoma::resolver::DatabaseBackedResolver;
 
-use crate::{resolver::wrapper::SymbolKindFilter, watcher};
+use crate::resolver::wrapper::SymbolKindFilter;
+use crate::watcher;
 
 use tokio::runtime;
 

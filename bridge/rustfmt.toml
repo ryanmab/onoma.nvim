@@ -1,0 +1,4 @@
+imports_granularity = "Module"
+format_macro_matchers = true
+max_width = 100
+hex_literal_case = "Lower"

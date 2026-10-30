@@ -1,12 +1,11 @@
-use std::{
-    path::PathBuf,
-    sync::{Arc, LazyLock},
-};
+use std::path::PathBuf;
+use std::sync::{Arc, LazyLock};
 
 use mlua::prelude::*;
 
 use onoma::indexer::DatabaseBackedIndexer;
-use tokio::{runtime, sync::RwLock};
+use tokio::runtime;
+use tokio::sync::RwLock;
 
 mod wrapper;
 
