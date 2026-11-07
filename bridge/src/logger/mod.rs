@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use std::string::ToString;
 use std::sync::LazyLock;
 
-use flexi_logger::{FileSpec, Logger, LoggerHandle, WriteMode};
+use flexi_logger::{Age, Cleanup, Criterion, FileSpec, Logger, LoggerHandle, Naming, WriteMode};
 
 mod wrapper;
 
@@ -14,6 +14,8 @@ pub enum CaptureLevel {
 }
 
 /// The global Logging context shared between Rust and Lua.
+///
+/// By default logs are written to `./onoma/logs/bridge_*.log` and rotated daily, keeping 7 days of logs.
 static LOGGER: LazyLock<LoggerHandle> = LazyLock::new(|| {
     let pattern = "onoma_bridge=info, onoma=info";
 
@@ -29,6 +31,11 @@ static LOGGER: LazyLock<LoggerHandle> = LazyLock::new(|| {
         .log_to_file(spec)
         .format(flexi_logger::opt_format)
         .write_mode(WriteMode::BufferAndFlush)
+        .rotate(
+            Criterion::Age(Age::Day),
+            Naming::TimestampsDirect,
+            Cleanup::KeepLogFiles(7),
+        )
         .start()
         .expect("Initializing logger should not fail")
 });
