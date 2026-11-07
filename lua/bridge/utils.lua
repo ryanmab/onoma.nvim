@@ -6,7 +6,7 @@ local M = {}
 --
 -- Matches to architecture formats for Rust targets: https://github.com/ryanmab/onoma.nvim/blob/main/.github/workflows/release-drafter.yml
 --
----@return string|false
+---@return string
 local function detect_arch()
 	local arch = jit.arch
 
@@ -16,14 +16,14 @@ local function detect_arch()
 		return 'aarch64'
 	end
 
-	return false
+	error('Unsupported CPU architecture: ' .. arch)
 end
 
 -- Detect operating system for target
 --
 -- Matches to architecture formats for Rust targets: https://github.com/ryanmab/onoma.nvim/blob/main/.github/workflows/release-drafter.yml
 --
----@return (string, string)|false
+---@return (string, string)
 local function detect_os()
 	local os = jit.os
 
@@ -35,7 +35,7 @@ local function detect_os()
 		return 'pc-windows-msvc', 'dll'
 	end
 
-	return false
+	error('Unsupported operating system: ' .. os)
 end
 
 -- Detect libc variant on Linux
@@ -77,10 +77,6 @@ function M.get_target()
 	local arch = detect_arch()
 	local os, ext = detect_os()
 
-	if arch == false or os == false then
-		error('Unable to load Onoma. Unable to determine target: ' .. os .. ' (' .. arch .. ')')
-	end
-
 	if os == 'unknown-linux' then
 		local libc = detect_linux_libc()
 
@@ -111,13 +107,12 @@ end
 
 -- Load the bridge binary for use in Lua code.
 --
----@return onoma.Bridge|nil
+---@return onoma.Bridge
 function M.load_bridge()
 	local ok, result = pcall(M.get_target)
 
 	if not ok then
 		error(string.format('Error loading library from %s: %s', result))
-		return
 	end
 
 	local lib = M.get_bridge_path() .. '/lib' .. constants.LIBRARY_NAME .. '.' .. result.extension
@@ -126,14 +121,12 @@ function M.load_bridge()
 
 	if load_err then
 		error(string.format('Error loading library from %s: %s', lib, load_err))
-		return
 	end
 
 	local onoma, run_err = loader()
 
 	if run_err then
 		error(string.format('Error calling loader from %s: %s', lib, run_err))
-		return
 	end
 
 	return onoma

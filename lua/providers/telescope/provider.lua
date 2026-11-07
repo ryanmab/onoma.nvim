@@ -5,78 +5,48 @@ local pickers = require('telescope.pickers')
 ---@field get_symbols fun(opts: onoma.Config)
 
 ---@class onoma.TelescopeProvider: onoma.Provider
----@field setup fun(): onoma.TelescopeProviderSetup
+---@field register_extension fun(): table
+
+local resolver
+local opts
 
 ---@type onoma.TelescopeProvider
-return {
-	setup = function()
-		local Async = require('utils.async')
-		local Onoma = require('utils.onoma')
-		local log = require('utils.log')
+local M = {
+	setup = function(r, _, o)
+		resolver = r
+		opts = vim.tbl_deep_extend('force', require('config'), o == nil and {} or o)
+	end,
+	register_extension = function()
+		return require('telescope').register_extension({
+			exports = {
+				get_symbols = function()
+					pickers
+						.new(opts, {
+							results_title = opts.telescope.results_title,
+							preview_title = opts.telescope.preview_title,
+							prompt_title = opts.telescope.prompt_title,
 
-		local project_directory = { vim.fn.getcwd() }
-
-		log.info('Initialising Telescope integration for: ' .. table.concat(project_directory, ', '))
-
-		local resolver, watcher = unpack(Async(function()
-			local ok, resolver = pcall(Onoma.new_resolver, project_directory)
-			if not ok then
-				log.error('Failed to create resolver: ' .. resolver)
-			end
-
-			local ok, watcher = pcall(Onoma.new_watcher, project_directory)
-			if not ok then
-				log.error('Failed to create watcher: ' .. watcher)
-			end
-
-			return {
-				resolver,
-				watcher,
-			}
-		end):await())
-
-		Async(function()
-			local ok, err = pcall(watcher.start, watcher)
-
-			if not ok then
-				log.error('Failed to start watcher: ' .. err)
-			end
-
-			local ok, err = pcall(watcher.run_full_index, watcher)
-
-			if not ok then
-				log.error('Failed to run full index: ' .. err)
-			end
-		end):run()
-
-		return {
-			get_symbols = function(opts)
-				opts = vim.tbl_deep_extend('force', require('config'), opts == nil and {} or opts)
-
-				pickers
-					.new(opts, {
-						results_title = opts.telescope.results_title,
-						preview_title = opts.telescope.preview_title,
-						prompt_title = opts.telescope.prompt_title,
-
-						finder = finders.new_dynamic({
-							entry_maker = require('providers.telescope.format').lsp_symbol(),
-							fn = require('providers.telescope.finder').get_symbols(resolver, opts),
-						}),
-						sorter = require('telescope.sorters').Sorter:new({
-							discard = false,
-							scoring_function = function(_, _, ordinal)
-								return 1 / ordinal
+							finder = finders.new_dynamic({
+								entry_maker = require('providers.telescope.format').lsp_symbol(),
+								fn = require('providers.telescope.finder').get_symbols(resolver, opts),
+							}),
+							sorter = require('telescope.sorters').Sorter:new({
+								discard = false,
+								scoring_function = function(_, _, ordinal)
+									return 1 / ordinal
+								end,
+								highlighter = require('providers.telescope.format').substr_highlighter(),
+							}),
+							previewer = require('telescope.config').values.qflist_previewer({}),
+							tiebreak = function()
+								return false
 							end,
-							highlighter = require('providers.telescope.format').substr_highlighter(),
-						}),
-						previewer = require('telescope.config').values.qflist_previewer({}),
-						tiebreak = function()
-							return false
-						end,
-					})
-					:find()
-			end,
-		}
+						})
+						:find()
+				end,
+			},
+		})
 	end,
 }
+
+return M

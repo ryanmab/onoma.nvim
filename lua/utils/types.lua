@@ -33,7 +33,7 @@
 ---@field pending userdata A handle to be used for async operations.
 
 ---@class onoma.Provider
----@field setup fun(opts: onoma.Config)
+---@field setup fun(resolver: onoma.Resolver, watcher: onoma.Watcher, opts: onoma.Config)
 
 ---@alias onoma.SymbolKind
 ---| "Unknown"            # An unknown or unspecified symbol kind.

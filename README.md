@@ -75,11 +75,12 @@ return {
 	},
 	event = 'VeryLazy',
 	config = function()
-		vim.keymap.set({ 'n', 'v', 'x' }, 'fs', function()
-			require('telescope').extensions.onoma.get_symbols({
-				-- Default configuration can be found in: "lua/config.lua"
-			})
-		end, { desc = 'Symbols', silent = true })
+		require('onoma').setup({
+			-- Default configuration can be found in: "lua/config.lua"
+			picker = { 'telescope' },
+		})
+
+		vim.keymap.set({ 'n', 'v', 'x' }, 'fs', require('telescope').extensions.onoma.get_symbols, { desc = 'Symbols', silent = true })
 	end,
 }
 ```

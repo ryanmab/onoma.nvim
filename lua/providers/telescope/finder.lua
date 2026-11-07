@@ -7,11 +7,7 @@ local M = {}
 ---@param opts onoma.Config
 function M.get_symbols(resolver, opts)
 	local Async = require('utils.async')
-	local ok, onoma = pcall(require('bridge.utils').load_bridge)
-	if not ok or onoma == nil then
-		vim.notify_once('Onoma did not load correctly: ' .. onoma, vim.log.levels.ERROR)
-		return
-	end
+	local onoma = require('bridge.utils').load_bridge()
 
 	---@type onoma.QueryContext
 	local context = onoma.create_context(buffer.current_buffer_path(), opts.symbol_kinds or nil)
