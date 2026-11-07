@@ -3,12 +3,7 @@ local M = {}
 ---@param debug boolean
 function M.set_debug_mode(debug)
 	local utils = require('bridge.utils')
-
-	local ok, onoma = pcall(utils.load_bridge)
-	if not ok or onoma == nil then
-		vim.notify_once('Onoma did not load correctly: ' .. onoma, vim.log.levels.ERROR)
-		error()
-	end
+	local onoma = utils.load_bridge()
 
 	onoma.set_debug_mode(debug)
 end
@@ -19,10 +14,7 @@ function M.new_resolver(directories)
 	local utils = require('bridge.utils')
 	local log = require('utils.log')
 
-	local ok, onoma = pcall(utils.load_bridge)
-	if not ok or onoma == nil then
-		error('Onoma did not load correctly: ' .. onoma)
-	end
+	local onoma = utils.load_bridge()
 
 	local ok, resolver = pcall(onoma.get_resolver, directories)
 	if not ok then
@@ -40,10 +32,7 @@ function M.new_watcher(directories)
 	local utils = require('bridge.utils')
 	local log = require('utils.log')
 
-	local ok, onoma = pcall(utils.load_bridge)
-	if not ok or onoma == nil then
-		error('Onoma did not load correctly: ' .. onoma)
-	end
+	local onoma = utils.load_bridge()
 
 	local ok, watcher = pcall(onoma.get_watcher, directories)
 	if not ok then

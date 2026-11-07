@@ -16,12 +16,7 @@ AsyncTask.__index = AsyncTask
 ---@field use_uv boolean
 local Async = {
 	poll_pending = (coroutine.wrap(function()
-		local ok, result = pcall(require('bridge.utils').load_bridge)
-		if not ok or result == nil then
-			vim.notify_once('Onoma did not load correctly: ' .. tostring(result), vim.log.levels.ERROR)
-			return
-		end
-		return result.pending
+		return require('bridge.utils').load_bridge().pending
 	end))(),
 	use_schedule = true,
 	use_uv = true,

@@ -1,5 +1,6 @@
 local function onoma()
 	local ok, onoma = pcall(require('bridge.utils').load_bridge)
+
 	if not ok or onoma == nil then
 		vim.notify_once('Onoma did not load correctly: ' .. onoma, vim.log.levels.ERROR)
 		return
