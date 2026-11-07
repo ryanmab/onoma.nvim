@@ -1,5 +1,10 @@
 local M = {}
 
+-- Initialise the resolver and watcher, ready for providers to hook into.
+--
+-- This is done asynchronously, so that the resolver and watcher can be initialised in the background
+-- without blocking the main thread.
+--
 ---@return { resolver: onoma.Resolver, watcher: onoma.Watcher }
 local function initialise_onoma()
 	local Async = require('utils.async')

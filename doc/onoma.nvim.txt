@@ -1,5 +1,5 @@
 *onoma.nvim.txt*
-                             For Neovim >= 0.10.0    Last change: 2026 June 19
+                         For Neovim >= 0.10.0    Last change: 2026 November 07
 
 ==============================================================================
 Table of Contents                               *onoma.nvim-table-of-contents*
@@ -60,12 +60,12 @@ SNACKS
 >lua
     return {
         'ryanmab/onoma.nvim',
-    
+
         version = '*', -- Required when using prebuilt binaries
-    
+
         -- Otherwise, you can build from source
         -- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
-    
+
         dependencies = {
             'folke/snacks.nvim',
         },
@@ -75,7 +75,7 @@ SNACKS
                 -- Default configuration can be found in: "lua/config.lua"
                 picker = { 'snacks' },
             })
-    
+
             vim.keymap.set({ 'n', 'v', 'x' }, 'fs', Snacks.picker.get_symbols, { desc = 'Symbols', silent = true })
         end,
     }
@@ -87,22 +87,23 @@ TELESCOPE
 >lua
     return {
         'ryanmab/onoma.nvim',
-    
+
         version = '*', -- Required when using prebuilt binaries
-    
+
         -- Otherwise, you can build from source
         -- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
-    
+
         dependencies = {
             'nvim-telescope/telescope.nvim',
         },
         event = 'VeryLazy',
         config = function()
-            vim.keymap.set({ 'n', 'v', 'x' }, 'fs', function()
-                require('telescope').extensions.onoma.get_symbols({
-                    -- Default configuration can be found in: "lua/config.lua"
-                })
-            end, { desc = 'Symbols', silent = true })
+            require('onoma').setup({
+                -- Default configuration can be found in: "lua/config.lua"
+                picker = { 'telescope' },
+            })
+
+            vim.keymap.set({ 'n', 'v', 'x' }, 'fs', require('telescope').extensions.onoma.get_symbols, { desc = 'Symbols', silent = true })
         end,
     }
 <
