@@ -237,6 +237,8 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v7
+
       - name: Update nightly release
         run: | 
           echo "${{ needs.update_release.outputs.release_notes }}" > ./release_notes.md
