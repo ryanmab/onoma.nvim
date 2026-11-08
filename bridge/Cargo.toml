@@ -2,7 +2,7 @@
 name = "onoma-bridge"
 version = "0.0.31"
 edition = "2024"
-rust-version = "1.88.0"
+rust-version = "1.89.0"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

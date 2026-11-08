@@ -74,7 +74,7 @@ jobs:
 
     strategy:
       matrix:
-        msrv: ["1.88.0"]
+        msrv: ["1.89.0"]
 
     steps:
       - uses: actions/checkout@v7
