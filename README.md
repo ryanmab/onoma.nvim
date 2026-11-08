@@ -41,7 +41,7 @@ return {
 
 	version = '*', -- Required for stable releases (recommended)
 
-	-- Or, you can use use the nightly builds
+	-- Or, you can use the nightly builds
 	-- tag = 'nightly',
 
 	-- Otherwise, you can build from source
@@ -70,7 +70,7 @@ return {
 
 	version = '*', -- Required for stable releases (recommended)
 
-	-- Or, you can use use the nightly builds
+	-- Or, you can use the nightly builds
 	-- tag = 'nightly',
 
 	-- Otherwise, you can build from source
