@@ -247,3 +247,5 @@ jobs:
           gh release create nightly --title=nightly --prerelease --notes-file ./release_notes.md  --draft --target $GITHUB_SHA
           gh release upload nightly ./builds/*
           gh release edit nightly --prerelease --draft=false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
