@@ -75,7 +75,13 @@ local function download_or_return_bridge(owner, repository, release_tag)
 
 	local bridge_file = bridge_path .. '/lib' .. constants.LIBRARY_NAME .. '.' .. target.extension
 
-	if file_exists(bridge_file) and git.get_downloaded_release_tag() == release_tag then
+	if
+		file_exists(bridge_file)
+		and git.get_downloaded_release_tag() == release_tag
+		-- Nightly updates frequently, so we always want to download it again to ensure we have the
+		-- up-to-date commit against the nightly tag
+		and not release_tag == 'nightly'
+	then
 		coroutine.yield('Bridge is already downloaded: ' .. release_tag)
 
 		return bridge_file
@@ -101,7 +107,13 @@ local function download_or_return_checksum(owner, repository, release_tag)
 
 	local checksum_file = bridge_path .. '/lib' .. constants.LIBRARY_NAME .. '.' .. target.extension .. '.sha265'
 
-	if file_exists(checksum_file) and git.get_downloaded_release_tag() == release_tag then
+	if
+		file_exists(checksum_file)
+		and git.get_downloaded_release_tag() == release_tag
+		-- Nightly updates frequently, so we always want to download it again to ensure we have the
+		-- up-to-date commit against the nightly tag
+		and not release_tag == 'nightly'
+	then
 		coroutine.yield('Bridge checksum is already downloaded: ' .. release_tag)
 
 		return checksum_file
