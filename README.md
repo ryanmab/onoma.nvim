@@ -39,7 +39,10 @@ https://github.com/user-attachments/assets/e5e90738-6976-4951-9a2f-4cad7f3ba1c3
 return {
 	'ryanmab/onoma.nvim',
 
-	version = '*', -- Required when using prebuilt binaries
+	version = '*', -- Required for stable releases (recommended)
+
+	-- Or, you can use use the nightly builds
+	-- tag = 'nightly',
 
 	-- Otherwise, you can build from source
 	-- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
@@ -65,7 +68,10 @@ return {
 return {
 	'ryanmab/onoma.nvim',
 
-	version = '*', -- Required when using prebuilt binaries
+	version = '*', -- Required for stable releases (recommended)
+
+	-- Or, you can use use the nightly builds
+	-- tag = 'nightly',
 
 	-- Otherwise, you can build from source
 	-- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
@@ -80,7 +86,12 @@ return {
 			picker = { 'telescope' },
 		})
 
-		vim.keymap.set({ 'n', 'v', 'x' }, 'fs', require('telescope').extensions.onoma.get_symbols, { desc = 'Symbols', silent = true })
+		vim.keymap.set(
+			{ 'n', 'v', 'x' },
+			'fs',
+			require('telescope').extensions.onoma.get_symbols,
+			{ desc = 'Symbols', silent = true }
+		)
 	end,
 }
 ```
