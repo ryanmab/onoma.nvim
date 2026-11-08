@@ -62,7 +62,19 @@ local function new_task(fn)
 	local function step()
 		local ok, value = coroutine.resume(task.co)
 		if not ok then
-			error('Coroutine error: ' .. tostring(value))
+			if task.timer then
+				task.timer:stop()
+				task.timer:close()
+				task.timer = nil
+			end
+
+			vim.notify('Coroutine error: ' .. tostring(value), vim.log.levels.ERROR)
+
+			if task.on_done then
+				task.on_done(nil)
+			end
+
+			return
 		end
 
 		local dead = coroutine.status(task.co) == 'dead'
