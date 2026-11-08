@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag_name: ${{ steps.release-drafter.outputs.tag_name }}
+      release_notes: ${{ steps.release-drafter.outputs.body }}
 
     steps:
       - name: Update draft release
@@ -227,3 +228,20 @@ jobs:
           draft: true
           token: ${{ github.token }}
           files: ./bridge/${{ matrix.target }}*
+
+  update_nightly:
+    name: Update nightly
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [update_release, macos_builds, linux_builds, windows_builds]
+    permissions:
+      contents: write
+    steps:
+      - name: Update nightly release
+        run: | 
+          echo "${{ needs.update_release.outputs.release_notes }}" > ./release_notes.md
+          gh release download ${{needs.update_release.outputs.tag_name}} --clobber --dir ./builds/
+          gh release delete nightly --cleanup-tag --yes
+          gh release create nightly --title=nightly --prerelease --notes-file ./release_notes.md  --draft --target $GITHUB_SHA
+          gh release upload nightly ./builds/*
+          gh release edit nightly --prerelease --draft=false
