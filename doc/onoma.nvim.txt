@@ -1,5 +1,5 @@
 *onoma.nvim.txt*
-                         For Neovim >= 0.10.0    Last change: 2026 November 08
+                         For Neovim >= 0.10.0    Last change: 2026 November 13
 
 ==============================================================================
 Table of Contents                               *onoma.nvim-table-of-contents*
@@ -54,8 +54,7 @@ INSTALLATION                              *onoma.nvim-onoma.nvim-installation*
 
 LAZY.NVIM ~
 
-
-SNACKS
+Snacks ~
 
 >lua
     return {
@@ -84,8 +83,7 @@ SNACKS
     }
 <
 
-
-TELESCOPE
+Telescope ~
 
 >lua
     return {
@@ -115,6 +113,35 @@ TELESCOPE
                 require('telescope').extensions.onoma.get_symbols,
                 { desc = 'Symbols', silent = true }
             )
+        end,
+    }
+<
+
+Mini.Pick ~
+
+>lua
+    return {
+        'ryanmab/onoma.nvim',
+
+        version = '*', -- Required for stable releases (recommended)
+
+        -- Or, you can use the nightly builds
+        -- tag = 'nightly',
+
+        -- Otherwise, you can build from source
+        -- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
+
+        dependencies = {
+            'nvim-telescope/telescope.nvim',
+        },
+        event = 'VeryLazy',
+        config = function()
+            require('onoma').setup({
+                -- Default configuration can be found in: "lua/config.lua"
+                picker = { 'mini' },
+            })
+
+            vim.keymap.set({ 'n', 'v', 'x' }, 'fs', MiniPick.registry.get_symbols, { desc = 'Symbols', silent = true })
         end,
     }
 <
