@@ -32,8 +32,9 @@ https://github.com/user-attachments/assets/e5e90738-6976-4951-9a2f-4cad7f3ba1c3
 
 ### Lazy.nvim
 
+<details>
 
-#### Snacks
+<summary>Snacks</summary>
 
 ```lua
 return {
@@ -62,7 +63,11 @@ return {
 }
 ```
 
-#### Telescope
+</details>
+
+<details>
+
+<summary>Telescope</summary>
 
 ```lua
 return {
@@ -95,6 +100,41 @@ return {
 	end,
 }
 ```
+
+</details>
+
+<details>
+
+<summary>Mini.Pick</summary>
+
+```lua
+return {
+	'ryanmab/onoma.nvim',
+
+	version = '*', -- Required for stable releases (recommended)
+
+	-- Or, you can use the nightly builds
+	-- tag = 'nightly',
+
+	-- Otherwise, you can build from source
+	-- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
+
+	dependencies = {
+		'nvim-telescope/telescope.nvim',
+	},
+	event = 'VeryLazy',
+	config = function()
+		require('onoma').setup({
+			-- Default configuration can be found in: "lua/config.lua"
+			picker = { 'mini' },
+		})
+
+		vim.keymap.set({ 'n', 'v', 'x' }, 'fs', MiniPick.registry.get_symbols, { desc = 'Symbols', silent = true })
+	end,
+}
+```
+
+</details>
 
 ## Contributing
 
