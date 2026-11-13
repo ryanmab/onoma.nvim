@@ -1,9 +1,11 @@
+local M = {}
+
 ---@class onoma.SnacksProvider: onoma.Provider
 
 ---@param resolver onoma.Resolver
 ---@param opts onoma.Config
 ---@return snacks.picker.Config
-local function get_symbols(resolver, opts)
+local function create_get_symbols_config(resolver, opts)
 	return vim.tbl_deep_extend('force', {
 		live = true,
 		title = opts.snacks.title,
@@ -46,13 +48,13 @@ local function get_symbols(resolver, opts)
 	}, require('providers.snacks.layouts.' .. opts.snacks.layout).get_layout())
 end
 
----@type onoma.SnacksProvider
-return {
-	setup = function(resolver, _, opts)
-		if not Snacks or not pcall(require, 'snacks.picker') then
-			error('Cannot register pickers as Snacks is not enabled')
-		end
+function M.setup(resolver, _, opts)
+	if not Snacks or not pcall(require, 'snacks.picker') then
+		error('Cannot register pickers as Snacks is not enabled')
+	end
 
-		Snacks.picker.sources.get_symbols = get_symbols(resolver, opts)
-	end,
-}
+	Snacks.picker.sources.get_symbols = create_get_symbols_config(resolver, opts)
+end
+
+---@type onoma.SnacksProvider
+return M

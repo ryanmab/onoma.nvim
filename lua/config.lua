@@ -1,4 +1,4 @@
----@alias onoma.Picker "snacks" | "telescope"
+---@alias onoma.Picker "snacks" | "telescope" | "mini"
 
 ---@class onoma.SnacksConfig
 ---@field title? string
@@ -9,11 +9,15 @@
 ---@field prompt_title? string
 ---@field preview_title? string
 
+---@class onoma.MiniConfig
+---@field batch_size? number
+
 ---@class onoma.Config
 ---@field picker? onoma.Picker | (onoma.Picker)[]
 ---@field debug? boolean
 ---@field snacks? onoma.SnacksConfig
 ---@field telescope? onoma.TelescopeConfig
+---@field mini? onoma.MiniConfig
 ---@field symbol_kinds? {string: onoma.SymbolKind[]}|onoma.SymbolKind[]
 
 ---@type onoma.Config
@@ -28,6 +32,9 @@ return {
 		results_title = 'Symbols (Onoma)',
 		prompt_title = '',
 		preview_title = '',
+	},
+	mini = {
+		batch_size = 1000,
 	},
 	symbol_kinds = {
 		go = {
