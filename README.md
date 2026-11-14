@@ -120,7 +120,7 @@ return {
 	-- build = 'cargo --config ./bridge/.cargo/config.toml build --release --manifest-path ./bridge/Cargo.toml'
 
 	dependencies = {
-		'nvim-telescope/telescope.nvim',
+		{ 'nvim-mini/mini.pick', version = '*' },
 	},
 	event = 'VeryLazy',
 	config = function()
@@ -132,6 +132,139 @@ return {
 		vim.keymap.set({ 'n', 'v', 'x' }, 'fs', MiniPick.registry.get_symbols, { desc = 'Symbols', silent = true })
 	end,
 }
+```
+
+</details>
+
+### vim.pack
+
+<details>
+
+<summary>Snacks</summary>
+
+```lua
+vim.api.nvim_create_autocmd('PackChanged', {
+	callback = function(ev)
+		local name, kind = ev.data.spec.name, ev.data.kind
+
+		if name == 'onoma.nvim' and (kind == 'install' or kind == 'update') then
+			if not ev.data.active then
+				vim.cmd.packadd('onoma.nvim')
+			end
+
+			require('onoma').build():await()
+		end
+	end,
+})
+
+vim.pack.add({
+	'folke/snacks.nvim',
+	{
+		src = 'https://github.com/ryanmab/onoma.nvim',
+
+		version = '*', -- Required for stable releases (recommended)
+
+		-- Or, you can use the nightly builds
+		-- tag = 'nightly',
+	},
+})
+
+require('onoma').setup({
+	-- Default configuration can be found in: "lua/config.lua"
+	picker = { 'snacks' },
+})
+
+vim.keymap.set({ 'n', 'v', 'x' }, 'fs', Snacks.picker.get_symbols, {
+	desc = 'Symbols',
+	silent = true,
+})
+```
+
+</details>
+
+<details>
+
+<summary>Telescope</summary>
+
+```lua
+vim.api.nvim_create_autocmd('PackChanged', {
+	callback = function(ev)
+		local name, kind = ev.data.spec.name, ev.data.kind
+
+		if name == 'onoma.nvim' and (kind == 'install' or kind == 'update') then
+			if not ev.data.active then
+				vim.cmd.packadd('onoma.nvim')
+			end
+
+			require('onoma').build():await()
+		end
+	end,
+})
+
+vim.pack.add({
+	'nvim-telescope/telescope.nvim',
+	{
+		src = 'https://github.com/ryanmab/onoma.nvim',
+
+		version = '*', -- Required for stable releases (recommended)
+
+		-- Or, you can use the nightly builds
+		-- tag = 'nightly',
+	},
+})
+
+require('onoma').setup({
+	-- Default configuration can be found in: "lua/config.lua"
+	picker = { 'telescope' },
+})
+
+vim.keymap.set(
+	{ 'n', 'v', 'x' },
+	'fs',
+	require('telescope').extensions.onoma.get_symbols,
+	{ desc = 'Symbols', silent = true }
+)
+```
+
+</details>
+
+<details>
+
+<summary>Mini.Pick</summary>
+
+```lua
+vim.api.nvim_create_autocmd('PackChanged', {
+	callback = function(ev)
+		local name, kind = ev.data.spec.name, ev.data.kind
+
+		if name == 'onoma.nvim' and (kind == 'install' or kind == 'update') then
+			if not ev.data.active then
+				vim.cmd.packadd('onoma.nvim')
+			end
+
+			require('onoma').build():await()
+		end
+	end,
+})
+
+vim.pack.add({
+	{ 'nvim-mini/mini.pick', version = '*' },
+	{
+		src = 'https://github.com/ryanmab/onoma.nvim',
+
+		version = '*', -- Required for stable releases (recommended)
+
+		-- Or, you can use the nightly builds
+		-- tag = 'nightly',
+	},
+})
+
+require('onoma').setup({
+	-- Default configuration can be found in: "lua/config.lua"
+	picker = { 'mini' },
+})
+
+vim.keymap.set({ 'n', 'v', 'x' }, 'fs', MiniPick.registry.get_symbols, { desc = 'Symbols', silent = true })
 ```
 
 </details>
