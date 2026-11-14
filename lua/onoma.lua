@@ -8,7 +8,7 @@ local M = {}
 ---@return { resolver: onoma.Resolver, watcher: onoma.Watcher }
 local function initialise_onoma()
 	local Async = require('utils.async')
-	local Onoma = require('utils.onoma')
+	local onoma = require('utils.onoma')
 	local log = require('utils.log')
 
 	local project_directory = { vim.fn.getcwd() }
@@ -16,13 +16,13 @@ local function initialise_onoma()
 	log.info('Initialising integration for: ' .. table.concat(project_directory, ', '))
 
 	local resolver, watcher = unpack(Async(function()
-		local ok, resolver = pcall(Onoma.new_resolver, project_directory)
+		local ok, resolver = pcall(onoma.new_resolver, project_directory)
 		if not ok then
 			log.error('Failed to create resolver: ' .. resolver)
 			return { nil, nil }
 		end
 
-		local ok, watcher = pcall(Onoma.new_watcher, project_directory)
+		local ok, watcher = pcall(onoma.new_watcher, project_directory)
 		if not ok then
 			log.error('Failed to create watcher: ' .. watcher)
 			return { nil, nil }
@@ -94,6 +94,17 @@ function M.setup(opts)
 			error('Failed to setup picker (' .. picker .. '): ' .. err)
 		end
 	end
+end
+
+function M.build()
+	local Async = require('utils.async')
+	local download = require('bridge.download')
+
+	return Async(download.download_bridge)
+		-- Report progress messages back to the editor
+		:on_yield(function(msg)
+			vim.notify(tostring(msg), vim.log.levels.INFO)
+		end)
 end
 
 return M
