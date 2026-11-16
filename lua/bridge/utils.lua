@@ -1,6 +1,8 @@
 local constants = require('constant')
 
-local M = {}
+local M = {
+	bridge = nil,
+}
 
 -- Detect CPU architecture for target.
 --
@@ -109,6 +111,10 @@ end
 --
 ---@return onoma.Bridge
 function M.load_bridge()
+	if M.bridge then
+		return M.bridge
+	end
+
 	local ok, result = pcall(M.get_target)
 
 	if not ok then
@@ -123,13 +129,15 @@ function M.load_bridge()
 		error(string.format('Error loading library from %s: %s', lib, load_err))
 	end
 
-	local onoma, run_err = loader()
+	local bridge, run_err = loader()
 
 	if run_err then
 		error(string.format('Error calling loader from %s: %s', lib, run_err))
 	end
 
-	return onoma
+	M.bridge = bridge
+
+	return M.bridge
 end
 
 return M

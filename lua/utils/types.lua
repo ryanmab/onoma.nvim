@@ -34,6 +34,7 @@
 
 ---@class onoma.Provider
 ---@field setup fun(resolver: onoma.Resolver, watcher: onoma.Watcher, opts: onoma.Config)
+---@field health fun()
 
 ---@alias onoma.SymbolKind
 ---| "Unknown"            # An unknown or unspecified symbol kind.

@@ -111,5 +111,13 @@ function M.setup(resolver, _, opts)
 	MiniPick.registry.get_symbols = create_get_symbols_callback(resolver, opts)
 end
 
+function M.health()
+	if MiniPick then
+		vim.health.ok('mini.pick is available.')
+	else
+		vim.health.warn('mini.pick is not available.')
+	end
+end
+
 ---@type onoma.MiniProvider
 return M

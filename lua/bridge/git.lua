@@ -14,7 +14,12 @@ function M.get_release_tag(cwd)
 		'describe',
 		'--tags',
 		'--exact-match',
+		-- Pipe git errors away from stderr as `io.popen` doesn't capture stderr and as a
+		-- result, it'll be forwarded all the way to the neovim instance otherwise. In either
+		-- case, if we don't get a tag into stdout, this function will fail.
+		'2>/dev/null',
 	}
+
 	local command = table.concat(args, ' ')
 
 	local handle = io.popen(command)
@@ -27,6 +32,8 @@ function M.get_release_tag(cwd)
 	handle:close()
 
 	local lines = vim.split(output, '\n')
+
+	vim.notify(lines[1])
 
 	if lines[1] == '' then
 		return nil

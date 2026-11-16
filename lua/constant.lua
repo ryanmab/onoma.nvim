@@ -3,4 +3,6 @@ return {
 	REPOSITORY_NAME = 'onoma.nvim',
 	LIBRARY_NAME = 'onoma_bridge',
 	TAG_FILE = 'tag',
+
+	PICKERS = { 'snacks', 'telescope', 'mini' },
 }

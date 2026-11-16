@@ -56,5 +56,15 @@ function M.setup(resolver, _, opts)
 	Snacks.picker.sources.get_symbols = create_get_symbols_config(resolver, opts)
 end
 
+function M.health()
+	if not Snacks then
+		vim.health.warn('Snacks is not available.')
+	elseif not pcall(require, 'snacks.picker') then
+		vim.health.warn('Snacks is available, but snacks.picker is not available.')
+	else
+		vim.health.ok('Snacks and snacks.picker are both available.')
+	end
+end
+
 ---@type onoma.SnacksProvider
 return M
