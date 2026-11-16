@@ -22,6 +22,8 @@ function M.setup_user_commands(resolver, watcher)
 			end
 
 			vim.notify('Full index has been started.')
+		elseif command == 'health' then
+			vim.cmd('checkhealth onoma')
 		else
 			error(string.format('"%s" is not a valid command', command), vim.log.levels.ERROR)
 		end
