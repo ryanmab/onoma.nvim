@@ -1,3 +1,6 @@
+local commands = require('utils.commands')
+local log = require('utils.log')
+
 local M = {}
 
 -- Initialise the resolver and watcher, ready for providers to hook into.
@@ -5,27 +8,26 @@ local M = {}
 -- This is done asynchronously, so that the resolver and watcher can be initialised in the background
 -- without blocking the main thread.
 --
+---@param directories string[]
 ---@return { resolver: onoma.Resolver, watcher: onoma.Watcher }
-local function initialise_onoma()
+local function initialise_onoma(directories)
 	local Async = require('utils.async')
 	local onoma = require('utils.onoma')
-	local log = require('utils.log')
 
-	local project_directory = { vim.fn.getcwd() }
+	log.info('Initialising integration for: ' .. table.concat(directories, ', '))
 
-	log.info('Initialising integration for: ' .. table.concat(project_directory, ', '))
-
+	---@type onoma.Resolver, onoma.Watcher
 	local resolver, watcher = unpack(Async(function()
-		local ok, resolver = pcall(onoma.new_resolver, project_directory)
+		---@type boolean, onoma.Resolver
+		local ok, resolver = pcall(onoma.new_resolver, directories)
 		if not ok then
-			log.error('Failed to create resolver: ' .. resolver)
-			return { nil, nil }
+			error('Failed to create resolver: ' .. resolver)
 		end
 
-		local ok, watcher = pcall(onoma.new_watcher, project_directory)
+		---@type boolean, onoma.Watcher
+		local ok, watcher = pcall(onoma.new_watcher, directories)
 		if not ok then
-			log.error('Failed to create watcher: ' .. watcher)
-			return { nil, nil }
+			error('Failed to create watcher: ' .. watcher)
 		end
 
 		return {
@@ -38,13 +40,13 @@ local function initialise_onoma()
 		local ok, err = pcall(watcher.start, watcher)
 
 		if not ok then
-			log.error('Failed to start watcher: ' .. err)
+			error('Failed to start watcher: ' .. err)
 		end
 
 		local ok, err = pcall(watcher.run_full_index, watcher)
 
 		if not ok then
-			log.error('Failed to run full index: ' .. err)
+			error('Failed to run full index: ' .. err)
 		end
 	end):run()
 
@@ -56,11 +58,21 @@ end
 
 ---@param opts onoma.Config
 function M.setup(opts)
-	local onoma = require('utils.onoma')
-	local log = require('utils.log')
-
 	opts = vim.tbl_deep_extend('force', require('config'), opts == nil and {} or opts)
 
+	local ok, bridge = pcall(require('bridge.utils').load_bridge)
+
+	if not ok then
+		-- We couldn't start setup as the bridge failed to load.
+		--
+		-- NB: we can't even use the logging utils here as they rely
+		-- on the bridge being loaded.
+		vim.notify('Setup failed: ' .. bridge, vim.log.levels.ERROR)
+		commands.setup_user_commands()
+		return
+	end
+
+	local onoma = require('utils.onoma')
 	onoma.set_debug_mode(opts.debug)
 
 	---@type onoma.Picker[]
@@ -74,33 +86,50 @@ function M.setup(opts)
 
 	if #pickers == 0 then
 		log.warn('No pickers specified, nothing to setup')
+		commands.setup_user_commands()
 
 		return
 	end
 
-	local resolver, watcher = unpack(initialise_onoma())
+	local project_directory = { vim.fn.getcwd() }
+	local ok, init = pcall(initialise_onoma, project_directory)
+
+	if not ok then
+		log.error('Failed to initialise onoma: ' .. init)
+		commands.setup_user_commands()
+
+		return
+	end
+
+	local resolver, watcher = unpack(init)
+	commands.setup_user_commands(resolver, watcher)
 
 	for _, picker in ipairs(pickers) do
 		---@type boolean, onoma.Provider
 		local ok, provider = pcall(require, 'providers.' .. picker .. '.provider')
 
 		if not ok or provider == nil then
-			error('No provider for picker: ' .. picker)
+			vim.notify('No provider for picker: ' .. picker, vim.log.levels.WARN)
+
+			goto continue
 		end
 
 		local ok, err = pcall(provider.setup, resolver, watcher, opts)
 
 		if not ok then
-			error('Failed to setup picker (' .. picker .. '): ' .. err)
+			vim.notify('Failed to setup picker (' .. picker .. '): ' .. err, vim.log.levels.ERROR)
+
+			goto continue
 		end
+
+		::continue::
 	end
 end
 
 function M.build()
 	local Async = require('utils.async')
-	local download = require('bridge.download')
 
-	return Async(download.download_bridge)
+	return Async(require('bridge.download').download_bridge)
 		-- Report progress messages back to the editor
 		:on_yield(function(msg)
 			vim.notify(tostring(msg), vim.log.levels.INFO)

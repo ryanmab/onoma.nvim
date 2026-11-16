@@ -49,5 +49,13 @@ function M.register_extension()
 	})
 end
 
+function M.health()
+	if not not pcall(require, 'telescope') then
+		vim.health.ok('Telescope is available.')
+	else
+		vim.health.warn('Telescope is not available.')
+	end
+end
+
 ---@type onoma.TelescopeProvider
 return M

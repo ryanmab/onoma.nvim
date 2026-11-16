@@ -1,8 +1,10 @@
+local log = require('utils.log')
+local utils = require('bridge.utils')
+
 local M = {}
 
 ---@param debug boolean
 function M.set_debug_mode(debug)
-	local utils = require('bridge.utils')
 	local onoma = utils.load_bridge()
 
 	onoma.set_debug_mode(debug)
@@ -11,9 +13,6 @@ end
 ---@param directories string[]
 ---@return onoma.Resolver
 function M.new_resolver(directories)
-	local utils = require('bridge.utils')
-	local log = require('utils.log')
-
 	local onoma = utils.load_bridge()
 
 	local ok, resolver = pcall(onoma.get_resolver, directories)
@@ -29,9 +28,6 @@ end
 ---@param directories string[]
 ---@return onoma.Watcher
 function M.new_watcher(directories)
-	local utils = require('bridge.utils')
-	local log = require('utils.log')
-
 	local onoma = utils.load_bridge()
 
 	local ok, watcher = pcall(onoma.get_watcher, directories)

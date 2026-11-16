@@ -30,6 +30,9 @@ https://github.com/user-attachments/assets/e5e90738-6976-4951-9a2f-4cad7f3ba1c3
 
 ## Installation
 
+> [!TIP]
+> Run `:checkhealth onoma` to validate Onoma is set up correctly.
+
 ### Lazy.nvim
 
 <details>
@@ -268,6 +271,12 @@ vim.keymap.set({ 'n', 'v', 'x' }, 'fs', MiniPick.registry.get_symbols, { desc = 
 ```
 
 </details>
+
+## User Commands
+
+- `:Onoma build` - Download and validate build.
+- `:Onoma run_full_index` - Re-index the whole workspace.
+- `:Onoma health` (or `:checkhealth onoma`) - Run health checks.
 
 ## Contributing
 

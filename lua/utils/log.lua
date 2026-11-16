@@ -1,29 +1,26 @@
-local function onoma()
-	local ok, onoma = pcall(require('bridge.utils').load_bridge)
+local function bridge()
+	local bridge = require('bridge.utils').load_bridge()
 
-	if not ok or onoma == nil then
-		vim.notify_once('Onoma did not load correctly: ' .. onoma, vim.log.levels.ERROR)
-		return
-	end
-
-	return onoma
+	return bridge
 end
 
 return {
 	trace = function(message)
-		onoma().log('TRACE', message)
+		bridge().log('TRACE', message)
 	end,
 	debug = function(message)
-		onoma().log('DEBUG', message)
+		bridge().log('DEBUG', message)
 	end,
 	info = function(message)
-		onoma().log('INFO', message)
+		bridge().log('INFO', message)
 	end,
 	warn = function(message)
-		onoma().log('WARN', message)
+		bridge().log('WARN', message)
 	end,
 	error = function(message)
-		onoma().log('ERROR', message)
+		bridge().log('ERROR', message)
 	end,
-	flush = onoma().flush,
+	flush = function()
+		bridge().flush()
+	end,
 }
