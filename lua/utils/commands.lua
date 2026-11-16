@@ -8,18 +8,24 @@ function M.setup_user_commands(resolver, watcher)
 
 		if command == 'update' then
 			vim.schedule(function()
-				M.build():run()
+				require('onoma').build():run()
 			end)
 		elseif command == 'run_full_index' then
 			if watcher == nil then
-				error('Cannot run full index as watcher has not been initialised')
+				vim.notify('Cannot run full index as watcher has not been initialised', vim.log.levels.ERROR)
+
+				return
 			end
 
-			local ok, err = pcall(watcher.run_full_index, watcher)
+			local Async = require('utils.async')
 
-			if not ok then
-				error('Failed to run full index: ' .. err)
-			end
+			Async(function()
+				local ok, err = pcall(watcher.run_full_index, watcher)
+
+				if not ok then
+					vim.notify('Failed to run full index: ' .. err, vim.log.levels.ERROR)
+				end
+			end):run()
 
 			vim.notify('Full index has been started.')
 		elseif command == 'health' then
