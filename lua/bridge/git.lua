@@ -33,8 +33,6 @@ function M.get_release_tag(cwd)
 
 	local lines = vim.split(output, '\n')
 
-	vim.notify(lines[1])
-
 	if lines[1] == '' then
 		return nil
 	end

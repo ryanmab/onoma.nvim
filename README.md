@@ -274,7 +274,7 @@ vim.keymap.set({ 'n', 'v', 'x' }, 'fs', MiniPick.registry.get_symbols, { desc = 
 
 ## User Commands
 
-- `:Onoma build` - Download and validate build.
+- `:Onoma update` - Update and validate build.
 - `:Onoma run_full_index` - Re-index the whole workspace.
 - `:Onoma health` (or `:checkhealth onoma`) - Run health checks.
 
