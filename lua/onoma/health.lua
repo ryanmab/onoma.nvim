@@ -13,8 +13,6 @@ M.check = function()
 		vim.health.error('Bridge could not be loaded: ' .. bridge)
 	end
 
-	vim.health.start('Pickers')
-
 	for _, picker in ipairs(constant.PICKERS) do
 		---@type boolean, onoma.Provider|nil
 		local ok, provider = pcall(require, 'providers.' .. picker .. '.provider')

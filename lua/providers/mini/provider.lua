@@ -112,8 +112,16 @@ function M.setup(resolver, _, opts)
 end
 
 function M.health()
+	vim.health.start('mini.pick')
+
 	if MiniPick then
 		vim.health.ok('mini.pick is available.')
+
+		if MiniPick.registry.get_symbols then
+			vim.health.ok('`MiniPick.registry.get_symbols` source is registered.')
+		else
+			vim.health.warn('`MiniPick.registry.get_symbols` source is not registered.')
+		end
 	else
 		vim.health.warn('mini.pick is not available.')
 	end

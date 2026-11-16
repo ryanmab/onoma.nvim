@@ -57,12 +57,20 @@ function M.setup(resolver, _, opts)
 end
 
 function M.health()
+	vim.health.start('Snacks.nvim')
+
 	if not Snacks then
 		vim.health.warn('Snacks is not available.')
 	elseif not pcall(require, 'snacks.picker') then
 		vim.health.warn('Snacks is available, but snacks.picker is not available.')
 	else
 		vim.health.ok('Snacks and snacks.picker are both available.')
+
+		if require('telescope').extensions.onoma.get_symbols then
+			vim.health.ok("`require('telescope').extensions.onoma.get_symbols` source is registered.")
+		else
+			vim.health.warn("`require('telescope').extensions.onoma.get_symbols` source is not registered.")
+		end
 	end
 end
 
