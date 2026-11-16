@@ -4,5 +4,6 @@ return {
 	LIBRARY_NAME = 'onoma_bridge',
 	TAG_FILE = 'tag',
 
+	---@type onoma.Picker[]
 	PICKERS = { 'snacks', 'telescope', 'mini' },
 }

@@ -1,6 +1,7 @@
 ---@class onoma.Watcher
 ---@field start fun(self: onoma.Watcher): nil Starts the watcher asynchronously.
 ---@field stop fun(self: onoma.Watcher): nil Stops the watcher
+---@field run_full_index fun(self: onoma.Watcher): nil Runs a full index on the currently watched directory.
 
 ---@class onoma.Resolver
 ---@field query fun(self: onoma.Resolver, query: string, context: onoma.QueryContext): onoma.ReceiverStream Queries symbols based on the provided query and context.

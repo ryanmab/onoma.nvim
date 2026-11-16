@@ -16,12 +16,15 @@ local function initialise_onoma(directories)
 
 	log.info('Initialising integration for: ' .. table.concat(directories, ', '))
 
+	---@type onoma.Resolver, onoma.Watcher
 	local resolver, watcher = unpack(Async(function()
+		---@type boolean, onoma.Resolver
 		local ok, resolver = pcall(onoma.new_resolver, directories)
 		if not ok then
 			error('Failed to create resolver: ' .. resolver)
 		end
 
+		---@type boolean, onoma.Watcher
 		local ok, watcher = pcall(onoma.new_watcher, directories)
 		if not ok then
 			error('Failed to create watcher: ' .. watcher)
@@ -53,22 +56,8 @@ local function initialise_onoma(directories)
 	}
 end
 
-function setup_user_commands()
-	vim.api.nvim_create_user_command('Onoma', function(opts)
-		local command = opts.fargs[1]
-
-		if command == 'build' then
-			vim.schedule(function()
-				M.build():run()
-			end)
-		end
-	end, { nargs = 1 })
-end
-
 ---@param opts onoma.Config
 function M.setup(opts)
-	setup_user_commands()
-
 	opts = vim.tbl_deep_extend('force', require('config'), opts == nil and {} or opts)
 
 	local ok, bridge = pcall(require('bridge.utils').load_bridge)
@@ -79,7 +68,7 @@ function M.setup(opts)
 		-- NB: we can't even use the logging utils here as they rely
 		-- on the bridge being loaded.
 		vim.notify('Setup failed: ' .. bridge, vim.log.levels.ERROR)
-
+		commands.setup_user_commands()
 		return
 	end
 
@@ -97,6 +86,7 @@ function M.setup(opts)
 
 	if #pickers == 0 then
 		log.warn('No pickers specified, nothing to setup')
+		commands.setup_user_commands()
 
 		return
 	end
@@ -106,33 +96,40 @@ function M.setup(opts)
 
 	if not ok then
 		log.error('Failed to initialise onoma: ' .. init)
+		commands.setup_user_commands()
 
 		return
 	end
 
 	local resolver, watcher = unpack(init)
+	commands.setup_user_commands(resolver, watcher)
 
 	for _, picker in ipairs(pickers) do
 		---@type boolean, onoma.Provider
 		local ok, provider = pcall(require, 'providers.' .. picker .. '.provider')
 
 		if not ok or provider == nil then
-			error('No provider for picker: ' .. picker)
+			vim.notify('No provider for picker: ' .. picker, vim.log.levels.WARN)
+
+			goto continue
 		end
 
 		local ok, err = pcall(provider.setup, resolver, watcher, opts)
 
 		if not ok then
-			error('Failed to setup picker (' .. picker .. '): ' .. err)
+			vim.notify('Failed to setup picker (' .. picker .. '): ' .. err, vim.log.levels.ERROR)
+
+			goto continue
 		end
+
+		::continue::
 	end
 end
 
 function M.build()
 	local Async = require('utils.async')
-	local download = require('bridge.download')
 
-	return Async(download.download_bridge)
+	return Async(require('bridge.download').download_bridge)
 		-- Report progress messages back to the editor
 		:on_yield(function(msg)
 			vim.notify(tostring(msg), vim.log.levels.INFO)
