@@ -1,5 +1,5 @@
 *onoma.nvim.txt*
-                         For Neovim >= 0.10.0    Last change: 2026 November 14
+                         For Neovim >= 0.10.0    Last change: 2026 November 16
 
 ==============================================================================
 Table of Contents                               *onoma.nvim-table-of-contents*
@@ -29,8 +29,9 @@ Onoma.nvim is a Neovim plugin built around Onoma
 indexer and fuzzy finder, which doesn’t require a full language server or
 limit workspace-wide searches.
 
-It provides a first-class integration into Neovim, using Snacks Picker or
-Telescope as the frontend for fuzzy finding semantic symbols in source code.
+It provides a first-class integration into Neovim, using Snacks Picker,
+Telescope or mini.pick as the frontend for fuzzy finding semantic symbols in
+source code.
 
 
 SUPPORTED LANGUAGES                *onoma.nvim-onoma.nvim-supported-languages*
@@ -286,6 +287,7 @@ ACKNOWLEDGMENTS                        *onoma.nvim-onoma.nvim-acknowledgments*
 - fff.nvim <https://github.com/dmtrKovalenko/fff.nvim/tree/main> for inspiring the semantic fuzzy finder design in Onoma.
 - snacks.nvim <https://github.com/folke/snacks.nvim/tree/main> for the excellent picker frontend.
 - telescope.nvim <https://github.com/nvim-telescope/telescope.nvim> for the excellent picker frontend.
+- mini.nvim <https://nvim-mini.org/mini.nvim/> for the excellent picker frontend.
 - frizbee <https://github.com/saghen/frizbee> for the high-performance SIMD implementation of fuzzy matching.
 
 ==============================================================================
