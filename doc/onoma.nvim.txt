@@ -1,5 +1,5 @@
 *onoma.nvim.txt*
-                         For Neovim >= 0.10.0    Last change: 2026 November 14
+                         For Neovim >= 0.10.0    Last change: 2026 November 16
 
 ==============================================================================
 Table of Contents                               *onoma.nvim-table-of-contents*
@@ -8,6 +8,7 @@ Table of Contents                               *onoma.nvim-table-of-contents*
   - Supported Languages            |onoma.nvim-onoma.nvim-supported-languages|
   - Demo                                          |onoma.nvim-onoma.nvim-demo|
   - Installation                          |onoma.nvim-onoma.nvim-installation|
+  - User Commands                        |onoma.nvim-onoma.nvim-user-commands|
   - Contributing                          |onoma.nvim-onoma.nvim-contributing|
   - Acknowledgments                    |onoma.nvim-onoma.nvim-acknowledgments|
 2. Links                                                    |onoma.nvim-links|
@@ -51,6 +52,8 @@ https://github.com/user-attachments/assets/e5e90738-6976-4951-9a2f-4cad7f3ba1c3
 
 INSTALLATION                              *onoma.nvim-onoma.nvim-installation*
 
+
+  [!TIP] Run `:checkhealth onoma` to validate Onoma is set up correctly.
 
 LAZY.NVIM ~
 
@@ -267,6 +270,13 @@ Mini.Pick ~
 
     vim.keymap.set({ 'n', 'v', 'x' }, 'fs', MiniPick.registry.get_symbols, { desc = 'Symbols', silent = true })
 <
+
+
+USER COMMANDS                            *onoma.nvim-onoma.nvim-user-commands*
+
+- `:Onoma build` - Download and validate build.
+- `:Onoma run_full_index` - Re-index the whole workspace.
+- `:Onoma health` (or `:checkhealth onoma`) - Run health checks.
 
 
 CONTRIBUTING                              *onoma.nvim-onoma.nvim-contributing*
