@@ -275,7 +275,7 @@ Mini.Pick ~
 
 USER COMMANDS                            *onoma.nvim-onoma.nvim-user-commands*
 
-- `:Onoma build` - Download and validate build.
+- `:Onoma update` - Update and validate build.
 - `:Onoma run_full_index` - Re-index the whole workspace.
 - `:Onoma health` (or `:checkhealth onoma`) - Run health checks.
 
