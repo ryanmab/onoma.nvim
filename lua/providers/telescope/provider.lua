@@ -50,8 +50,16 @@ function M.register_extension()
 end
 
 function M.health()
+	vim.health.start('Telescope')
+
 	if not not pcall(require, 'telescope') then
 		vim.health.ok('Telescope is available.')
+
+		if Snacks.picker.sources.get_symbols then
+			vim.health.ok('`Snacks.picker.sources.get_symbols` source is registered.')
+		else
+			vim.health.warn('`Snacks.picker.sources.get_symbols` source is not registered.')
+		end
 	else
 		vim.health.warn('Telescope is not available.')
 	end
