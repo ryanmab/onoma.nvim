@@ -98,13 +98,26 @@ function M.get_target()
 	}
 end
 
--- Get the path to the bridge binary.
+-- Get the path to the bridge directory.
 --
 ---@return string
 function M.get_bridge_path()
 	local plugin_directory = vim.fn.fnamemodify(debug.getinfo(1, 'S').source:sub(2), ':h:h:h')
 
 	return plugin_directory .. '/bridge/target/release'
+end
+
+-- Get the path to the bridge binary.
+--
+---@return string
+function M.get_library_path()
+	local ok, result = pcall(M.get_target)
+
+	if not ok then
+		error(string.format('Error loading library from %s: %s', result))
+	end
+
+	return M.get_bridge_path() .. '/lib' .. constants.LIBRARY_NAME .. '.' .. result.extension
 end
 
 -- Load the bridge binary for use in Lua code.
@@ -115,13 +128,7 @@ function M.load_bridge()
 		return M.bridge
 	end
 
-	local ok, result = pcall(M.get_target)
-
-	if not ok then
-		error(string.format('Error loading library from %s: %s', result))
-	end
-
-	local lib = M.get_bridge_path() .. '/lib' .. constants.LIBRARY_NAME .. '.' .. result.extension
+	local lib = M.get_library_path()
 
 	local loader, load_err = package.loadlib(lib, 'luaopen_onoma_bridge')
 

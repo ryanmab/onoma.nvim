@@ -4,13 +4,27 @@ local M = {}
 
 M.check = function()
 	vim.health.start('Bridge')
+	local utils = require('bridge.utils')
+	local git = require('bridge.git')
 
-	local ok, bridge = pcall(require('bridge.utils').load_bridge)
+	local ok, _ = pcall(utils.load_bridge)
 
 	if ok then
-		vim.health.ok('Bridge loaded successfully.')
+		local _, library_path = pcall(utils.get_library_path)
+
+		vim.health.ok('Bridge loaded successfully: `' .. library_path .. '`')
+
+		local downloaded_tag = git.get_downloaded_release_tag()
+
+		if downloaded_tag ~= nil then
+			vim.health.ok('Version: `' .. downloaded_tag .. '`')
+		else
+			vim.health.warn('Version: `(not set)`')
+		end
 	else
-		vim.health.error('Bridge could not be loaded: ' .. bridge)
+		local _, library_path = pcall(utils.get_library_path)
+
+		vim.health.error('Bridge could not be loaded: `' .. library_path .. '`')
 	end
 
 	for _, picker in ipairs(constant.PICKERS) do
