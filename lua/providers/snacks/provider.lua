@@ -66,10 +66,10 @@ function M.health()
 	else
 		vim.health.ok('Snacks and snacks.picker are both available.')
 
-		if require('telescope').extensions.onoma.get_symbols then
-			vim.health.ok("`require('telescope').extensions.onoma.get_symbols` source is registered.")
+		if Snacks.picker.sources.get_symbols then
+			vim.health.ok('`Snacks.picker.sources.get_symbols` source is registered.')
 		else
-			vim.health.warn("`require('telescope').extensions.onoma.get_symbols` source is not registered.")
+			vim.health.warn('`Snacks.picker.sources.get_symbols` source is not registered.')
 		end
 	end
 end

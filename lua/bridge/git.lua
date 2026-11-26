@@ -43,7 +43,7 @@ end
 ---@return string|nil
 function M.get_downloaded_release_tag()
 	local tag_file = utils.get_bridge_path() .. '/' .. constant.TAG_FILE
-	local f, err = io.open(tag_file, 'r')
+	local f, _ = io.open(tag_file, 'r')
 
 	if not f then
 		-- Tag file does not exist, treat as no tag

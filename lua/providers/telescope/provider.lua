@@ -55,10 +55,10 @@ function M.health()
 	if not not pcall(require, 'telescope') then
 		vim.health.ok('Telescope is available.')
 
-		if Snacks.picker.sources.get_symbols then
-			vim.health.ok('`Snacks.picker.sources.get_symbols` source is registered.')
+		if require('telescope').extensions.onoma.get_symbols then
+			vim.health.ok("`require('telescope').extensions.onoma.get_symbols` source is registered.")
 		else
-			vim.health.warn('`Snacks.picker.sources.get_symbols` source is not registered.')
+			vim.health.warn("`require('telescope').extensions.onoma.get_symbols` source is not registered.")
 		end
 	else
 		vim.health.warn('Telescope is not available.')
